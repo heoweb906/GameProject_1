@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/CutScene.unity
+    guid: 6f514c3da05606a45b7e19c7846a0a84
+  - enabled: 1
+    path: Assets/Scenes/Loading/Loading_Lobby.unity
+    guid: aed383cee3d55094baa4d57d17ade609
+  - enabled: 1
+    path: Assets/Scenes/Loading/Loading_Menu.unity
+    guid: f487c3e9755dff84c9b32c9252b22967
+  - enabled: 1
+    path: Assets/Scenes/Lobby.unity
+    guid: 07328398650bf354ba21a8bde85d46b9
+  - enabled: 1
+    path: Assets/Scenes/Menu.unity
+    guid: f8066945badaa0f409c255bcb39fbafb
+  - enabled: 1
+    path: Assets/Scenes/Timing.unity
+    guid: 0f3454914ce5cbb45b0ec33ee03d1b2c
+  - enabled: 1
+    path: Assets/Scenes/Loading/Loading_Stage_1.unity
+    guid: 5f0e2e3dba9392f4b9dd1f53f2d5ac03
+  - enabled: 1
+    path: Assets/Scenes/Play1.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/Play2.unity
+    guid: 9ac5b7a7292eb384eba2c24130990282
+  - enabled: 1
+    path: Assets/Scenes/Boss.unity
+    guid: 136657269c9e06a42932dbf40bb04b07
+  m_configObjects: {}
