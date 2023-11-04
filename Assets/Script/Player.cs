@@ -201,7 +201,7 @@ public class Player : MonoBehaviour
             }
         }
 
-        if(Input.GetKeyDown(KeyCode.E))
+        if(Input.GetKeyDown(KeyCode.E) || Input.GetMouseButtonDown(1))
         {
             if (weaponNumber == 1)
             {
@@ -220,9 +220,11 @@ public class Player : MonoBehaviour
             }
         }
 
+        
 
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+
+            if (Input.GetKeyDown(KeyCode.Escape))
         {
             ingame_UI.OnOffSettingPanel();
         }
