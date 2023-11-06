@@ -329,16 +329,6 @@ public class Player : MonoBehaviour
                         }
                     }
 
-                    Boss_Swan boss = hit.collider.GetComponent<Boss_Swan>();
-                    if (boss != null)
-                    {
-                        if (boss.monsterColor == weaponNumber)
-                        {
-                            boss.TakeDamage(attackDamage);
-                            gameManager.ComboBarBounceUp();
-                        }
-                    }
-
                     Boss_Bullet_Color bullet = hit.collider.GetComponent<Boss_Bullet_Color>();
                     if (bullet != null)
                     {
@@ -351,6 +341,31 @@ public class Player : MonoBehaviour
                     }
 
                 }
+
+
+                if (hasHit &&  hit.collider.CompareTag("Boss"))
+                {
+                    // 부모 또는 자식 오브젝트의 콜라이더를 검사
+                    Transform hitTransform = hit.collider.transform;
+                    Boss_Swan boss = hitTransform.GetComponent<Boss_Swan>();
+
+                    while (boss == null && hitTransform.parent != null)
+                    {
+                        hitTransform = hitTransform.parent;
+                        boss = hitTransform.GetComponent<Boss_Swan>();
+                    }
+
+                    if (boss != null)
+                    {
+                        if (boss.monsterColor == weaponNumber)
+                        {
+                            boss.TakeDamage(attackDamage);
+                            gameManager.ComboBarBounceUp();
+                        }
+                    }
+                }
+
+
                 gunAnimator.SetTrigger("Fire");
                 soundGun.Play(); 
             }
