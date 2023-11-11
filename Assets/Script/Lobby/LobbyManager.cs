@@ -8,6 +8,7 @@ public class LobbyManager : MonoBehaviour
     public GameManager gameManager;
     public PlayerInformation playerInformation;
 
+
     public void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
@@ -15,4 +16,5 @@ public class LobbyManager : MonoBehaviour
 
         PlayerPrefs.SetInt("PlayerHp", 4);
     }
+
 }

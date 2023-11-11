@@ -295,7 +295,8 @@ public class GameManager : MonoBehaviour
         {
             comboBarImage.fillAmount += 0.1f;
         }
-        else if (comboBarImage.fillAmount >= 0.75f)
+        
+        if (comboBarImage.fillAmount >= 0.75f)
         {
             comboBarImage.fillAmount = 0.75f;
             StartCoroutine(ActivateFeverMode());

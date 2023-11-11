@@ -158,7 +158,7 @@ public class Boss_Swan : MonoBehaviour
                 nowPatternNum = 2;
 
                 // 패턴 사용 확률 - 현재 모빌 패턴은 나오지 않도록 설정되어 있음
-                int randomFunction = Random.Range(6, 101);
+                int randomFunction = Random.Range(61, 101);
                 if(randomFunction  <= 5) 
                 {
                     Debug.Log("모빌 생성");

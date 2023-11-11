@@ -59,6 +59,7 @@ public class Monster : MonoBehaviour
 
         Invoke("ColorBack", 0.1f);
     }
+
     private void ColorBack()
     {
         if (monsterMaterial != null)

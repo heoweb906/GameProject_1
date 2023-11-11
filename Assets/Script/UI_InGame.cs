@@ -38,6 +38,11 @@ public class UI_InGame : MonoBehaviour
 
     public GameObject textPanel; // "아직 필드에 몬스터가 있습니다."
 
+
+    [Header("튜토리얼 패널")]
+    public GameObject tutorialPanel;
+    public bool isTutorialPanel = false;
+
     public void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
@@ -53,6 +58,9 @@ public class UI_InGame : MonoBehaviour
         volumeEffectSlider.value = volumeEffect;
     }
 
+
+
+
     public void OnOffSettingPanel()
     {
         if (stageManager.MonsterCount > 0)
@@ -65,22 +73,30 @@ public class UI_InGame : MonoBehaviour
         {
             if (!(player.isDie))
             {
-                if (!(settingPanel.activeSelf))
+                if(!isTutorialPanel)
                 {
-                    player.CamUnlock();
+                    if (!(settingPanel.activeSelf))
+                    {
+                        player.CamUnlock();
 
-                    isSettingPanel = true;
-                    settingPanel.gameObject.SetActive(true);
+                        isSettingPanel = true;
+                        settingPanel.gameObject.SetActive(true);
+                    }
+                    else if (settingPanel.activeSelf)
+                    {
+                        camera.SetMouseSpeed();
+
+                        isSettingPanel = false;
+                        settingPanel.gameObject.SetActive(false);
+
+                        player.CamLock();
+                    }
                 }
-                else if (settingPanel.activeSelf)
+                else
                 {
-                    camera.SetMouseSpeed();
-
-                    isSettingPanel = false;
-                    settingPanel.gameObject.SetActive(false);
-
-                    player.CamLock();
+                    OnOffTutorailPanel();
                 }
+                
             }
         }
     }
@@ -137,6 +153,20 @@ public class UI_InGame : MonoBehaviour
         player.SetPlayerSound();
     }
 
+
+    public void OnOffTutorailPanel()
+    {
+        if (!isTutorialPanel)
+        {
+            isTutorialPanel = true;
+            tutorialPanel.gameObject.SetActive(true);
+        }
+        else if (isTutorialPanel)
+        {
+            isTutorialPanel = false;
+            tutorialPanel.gameObject.SetActive(false);
+        }
+    }
 
 
     public void GoMenu()

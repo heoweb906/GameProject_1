@@ -112,6 +112,8 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        
+
 
         hp = PlayerPrefs.GetInt("PlayerHp");
 
@@ -220,11 +222,11 @@ public class Player : MonoBehaviour
             }
         }
 
-        
 
 
 
-            if (Input.GetKeyDown(KeyCode.Escape))
+        // esc 키를 누르면 작동
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             ingame_UI.OnOffSettingPanel();
         }

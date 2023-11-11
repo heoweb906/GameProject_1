@@ -39,6 +39,8 @@ public class CutSceneBrain : MonoBehaviour
 
     void Awake()
     {
+        PlayerPrefs.SetInt("firstStart", 1);
+
         nextCutDelayWFS = new WaitForSeconds(nextCutDelay);
         for (int i = 0; i < cutInfos.Length; i++)
         {

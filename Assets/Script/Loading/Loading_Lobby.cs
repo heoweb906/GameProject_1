@@ -88,4 +88,6 @@ public class Loading_Lobby : MonoBehaviour
         gameManager.ActivateHpImage(4); // 체력바 활성화
         gameManager.SetVolume(); // 슬라이더 작업에서 하는 거지만 혹시 모르니까... 
     }
+
+    
 }
