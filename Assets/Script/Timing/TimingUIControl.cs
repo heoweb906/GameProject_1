@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
+using static UnityEngine.Rendering.DebugUI;
+using static Unity.Burst.Intrinsics.X86;
 
 
 public class TimingUIControl : MonoBehaviour
@@ -12,6 +14,13 @@ public class TimingUIControl : MonoBehaviour
     [Header("판정선 관련")]
     public GameManager gameManager;
     public PlayerInformation playerInformation;
+
+
+    public ShuShuGif gifImage;
+    public GameObject fade;
+    public Image fadeImage;
+    bool timingfOff = false;
+
 
     public Canvas canvasTiming;
     public TMP_Text jugdeNumber;
@@ -103,7 +112,6 @@ public class TimingUIControl : MonoBehaviour
         Image timingIcon_ = Instantiate(timingIcon, position_timingIcon.position, Quaternion.identity);
         timingIcon_.transform.SetParent(position_timingIcon.transform);
         timingIcon_.rectTransform.anchoredPosition = Vector2.zero;
-        timingIcon_.color = new Color(0f, 0f, 0f, 1f); // 초기 알파값 0, 빨간색으로 설정
         Tweener timingIcon_main = timingIcon_.rectTransform.DOAnchorPosX(moveDistance, iconSpeed).SetEase(Ease.Linear);
 
         timingIcon_main.OnUpdate(() =>
@@ -126,12 +134,20 @@ public class TimingUIControl : MonoBehaviour
 
     public void RhythmAnimationCompleted(Image rhythmImage)
     {
-        Image timingIconSand_ = Instantiate(timingIcon_Sand, rhythmImage.rectTransform.position, Quaternion.identity);
-        timingIconSand_.transform.SetParent(canvasTiming.transform);
+        if (!timingfOff)
+        {
+            Image timingIconSand_ = Instantiate(timingIcon_Sand, rhythmImage.rectTransform.position, Quaternion.identity);
+            timingIconSand_.transform.SetParent(canvasTiming.transform);
 
-        timingIconSand_.DOFade(0f, 0.5f); // 알파값 서서히 1로 변경
+            timingIconSand_.DOFade(0f, 0.5f).OnComplete(() => DestroyTimingIcon(timingIconSand_)); 
 
-        Debug.Log("이미지가 겹쳤습니다");
+            Debug.Log("이미지가 겹쳤습니다");
+        }
+    }
+
+    private void DestroyTimingIcon(Image timingIcon)
+    {
+        Destroy(timingIcon.gameObject);
     }
 
     private IEnumerator DestroyAfterDelay(GameObject obj, float delay, float startTime)
@@ -215,7 +231,68 @@ public class TimingUIControl : MonoBehaviour
         gameManager.SetVolume();
     }
 
+    public void SetOptionReset()
+    {
+        // 마우스 감도, 배경음악, 효과음 초기화
+        // 슬라이더 바의 값도 같이 초기화
+        OnMouseSensitivityChanged(0.5f);
+        OnBGM_SoundSensitivityChanged(0.3f);
+        OnEffect_SoundSensitivityChanged(0.3f);
+        mouseSensitivitySlider.value = mouseFloat;
+        volumeBGMSlider.value = volumeBGM;
+        volumeEffectSlider.value = volumeEffect;
 
+
+        // 판정도 0으로 수정, 판정선도 0위치로 초기화
+        playerInformation.Jugde = 0;
+        Vector3 centerIconPosition = centerIcon.rectTransform.anchoredPosition;
+        centerIconPosition.x = 0f; // x축 위치를 0으로 설정
+        centerIcon.rectTransform.anchoredPosition = centerIconPosition;
+    }
+
+
+
+
+    public void ShuShuSleep()
+    {
+        timingfOff = true;
+        gifImage.StopDisplay();
+        StartCoroutine(gifImage.DisplayImages());
+
+        fade.SetActive(true);
+
+        Invoke("startFade",1f);
+    }
+
+    private void startFade()
+    {
+        StartCoroutine(FadeOutAndTurnMenu());
+    }
+
+    private IEnumerator FadeOutAndTurnMenu()
+    {
+        // sss 이미지를 서서히 투명하게 만듦
+        Color originalColor = fadeImage.color;
+        float elapsedTime = 0f;
+        float fadeDuration = 2.5f; // 페이드 아웃 기간
+
+        while (elapsedTime < fadeDuration)
+        {
+            // 투명도 조절
+            float alpha = Mathf.Lerp(0f, 1f, elapsedTime / fadeDuration);
+            fadeImage.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
+
+            // 경과 시간 업데이트
+            elapsedTime += Time.deltaTime;
+
+            // 한 프레임 대기
+            yield return null;
+        }
+
+
+        // 아래의 코드 내용을 실행
+        Invoke("SceneTurnMenu",0.2f);
+    }
 
     public void SceneTurnMenu()
     {
@@ -236,8 +313,12 @@ public class TimingUIControl : MonoBehaviour
         gameManager.ActivateHpImage(4); // 체력바 활성화
         gameManager.SetVolume(); // 슬라이더 작업에서 하는 거지만 혹시 모르니까... 
 
-        SceneManager.LoadScene("Lobby");
- 
+
+
+
+
+        SceneManager.LoadScene("Loading_Lobby");
+
     }
 
 }

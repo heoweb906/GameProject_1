@@ -14,6 +14,12 @@ public class LobbyManager : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>();
         playerInformation = FindObjectOfType<PlayerInformation>();
 
+
+
+        playerInformation.MouseSpeed = 0.5f;
+        playerInformation.VolumeBGM = 0.3f;
+        playerInformation.VolumeEffect = 0.3f;
+
         PlayerPrefs.SetInt("PlayerHp", 4);
     }
 
