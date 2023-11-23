@@ -9970,6 +9970,8 @@ MonoBehaviour:
   volumeBGMSlider: {fileID: 2125775388}
   volumeEffectSlider: {fileID: 2120245229}
   textPanel: {fileID: 1912623246}
+  tutorialPanel: {fileID: 0}
+  isTutorialPanel: 0
 --- !u!1 &1569097272
 GameObject:
   m_ObjectHideFlags: 0
@@ -10523,7 +10525,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1633229621}
   m_LocalRotation: {x: -0, y: 0.9978876, z: -0, w: -0.0649644}
-  m_LocalPosition: {x: -9.339999, y: 4.767, z: 49.920002}
+  m_LocalPosition: {x: -10.08, y: 4.767, z: 44.23}
   m_LocalScale: {x: 4, y: 4, z: 4}
   m_ConstrainProportionsScale: 0
   m_Children:

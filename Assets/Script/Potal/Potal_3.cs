@@ -1,16 +1,28 @@
 using UnityEngine.SceneManagement;
 using UnityEngine;
+using DG.Tweening.Core.Easing;
 
 public class Potal_3 : MonoBehaviour
 {
     [Header("스테이지 매니저")]
     public StageManager stageManager;
+    public GameManager gameManager;
 
     [Header("관련 변수들")]
     public Animator animDoor;
     public BoxCollider colliderBox;
     private bool b_isDoorOpen;
 
+    private void Awake()
+    {
+        gameManager = FindObjectOfType<GameManager>();
+    }
+
+    private void Start()
+    {
+        gameManager.bpmCount = 0;
+        PlayerPrefs.SetInt("Stage_1_MaxFloor", 3);
+    }
 
     private void Update()
     {
@@ -35,7 +47,7 @@ public class Potal_3 : MonoBehaviour
         if (other.CompareTag("Player")) // "Player" 태그를 가진 오브젝트와 충돌했을 때
         {
             Debug.Log("다음 스테이지로 이동합니다.");
-            SceneManager.LoadScene("Play1"); // Play 씬 1로 
+            SceneManager.LoadScene("Play4"); // Play 씬 1로 
         }
     }
 }

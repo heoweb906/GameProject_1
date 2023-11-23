@@ -370,7 +370,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 81bd0d532e309aa459b01a3a43ff01ab, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 0.3
   m_Pitch: 1
   Loop: 0
@@ -3417,7 +3417,7 @@ MonoBehaviour:
   - {fileID: 738436144}
   - {fileID: 364251844}
   bpmCount: 0
-  iconOn: 1
+  iconOn: 0
   soundManager: {fileID: 164870418}
   soundTime: {fileID: 452768309}
   aim_Around: {fileID: 751359671}

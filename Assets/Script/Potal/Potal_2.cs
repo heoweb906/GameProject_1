@@ -3,18 +3,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using DG.Tweening.Core.Easing;
 
 public class Potal_2 : MonoBehaviour
 {
     [Header("스테이지 매니저")]
     public StageManager stageManager;
+    public GameManager gameManager;
 
     [Header("관련 변수들")]
     public Animator animDoor;
     public BoxCollider colliderBox;
     private bool b_isDoorOpen;
 
+    private void Awake()
+    {
+        gameManager = FindObjectOfType<GameManager>();
+    }
 
+    private void Start()
+    {
+        gameManager.bpmCount = 0;
+        PlayerPrefs.SetInt("Stage_1_MaxFloor", 2);
+    }
 
     private void Update()
     {

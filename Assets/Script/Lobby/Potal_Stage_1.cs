@@ -8,10 +8,14 @@ public class Potal_Stage_1 : MonoBehaviour
     public GameManager gameManager;
     public PlayerInformation playerInformation;
 
+    public Elevator_1 elevator_1;
+
     private void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
         playerInformation = FindObjectOfType<PlayerInformation>();
+
+        gameManager.b_ActionCnt = true;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -24,7 +28,8 @@ public class Potal_Stage_1 : MonoBehaviour
             gameManager.soundManager.Stop();
             gameManager.iconOn = false;
 
-            SceneManager.LoadScene("Loading_Stage_1"); // "Timing" 씬으로 전환
+            playerInformation.Elevator_1 = elevator_1.nowFloor;
+            SceneManager.LoadScene("Loading_Stage"); // "Timing" 씬으로 전환
         }
     }
 

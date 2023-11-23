@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,10 @@ public class Monster_Long : Monster
     [Header("관련 오브젝트 / 변수")]
     public bool isAttack;
     public GameObject bulletPrefab; // 총알 프리팹을 연결해야 합니다.
+
+    public GameObject bulletFake;
+    public Transform positon_Bullet;
+    public float bulletSpeed;
 
     public Animator anim;
     private Transform player;
@@ -23,38 +28,36 @@ public class Monster_Long : Monster
     {
         if (currentHealth <= 0 && !doDie)
         {
+            bulletFake.SetActive(false);
+
+            Invoke("StartLowering",0.7f);
+
+
             anim.SetTrigger("doDie");
-            //anim.SetBool("boolDie",true);
             doDie = true;
         }
-
 
         if (!isAttack && !doDie && gameManager.bpmCount % 5 == 0 && gameManager.bpmCount != 0)  // 5번째 bpm 마다 한번씩 공격
         {
             isAttack = true;
-            StartCoroutine(AttackAfterDelay(0.35f));  // 0.35초 뒤에 공격 코루틴 시작 - 애니메이션 속도를 생각해서 공격과 BPM을 일치시키기 위해서
+            Attack();
         }
 
         if (!doDie)
         {
-            LookAtPlayer(); // 플레이어 방향으로 회전시키는 함수
+            LookAtPlayer(); 
         }
     }
 
-    private IEnumerator AttackAfterDelay(float delay)
+    
+     private void Attack()
     {
-        yield return new WaitForSeconds(delay); // 0.4초 대기
-        yield return StartCoroutine(Attack()); // Attack 코루틴 시작
-    }
-    IEnumerator Attack()
-    {
-        //anim.SetTrigger("doAttack");
-
-        yield return new WaitForSeconds(1.5f);
-        isAttack = false;
+        anim.SetTrigger("doAttack");
+        GrowAndShrink();
     }
 
 
+    // #.플레이어 방향으로 회전시키는 함수
     public void LookAtPlayer()
     {
         if (player != null)
@@ -67,52 +70,92 @@ public class Monster_Long : Monster
     }
 
 
-    public void ShootAtPlayer() // 애니메이션 이벤트로 연결해놨음
+
+    // #. 총알 발사 함수_(신버전)
+
+    public void GrowAndShrink()
     {
-        if (bulletPrefab != null)
+        float growDuration = 2.5f;
+        float maxSize = 8f;
+
+        bulletFake.SetActive(true);
+        bulletFake.transform.localScale = Vector3.zero;
+
+        // 만약 현재 체력이 이미 0이라면 즉시 함수 종료
+        if (currentHealth <= 0)
         {
-            // 플레이어 위치를 향해 회전
-            Vector3 playerPosition = player.position;  
-            Vector3 offset = new Vector3(0f, -1.2f, 0f); // 아래로 1 단위만큼 내리는 오프셋 // 총알이 목표로 하는 위치를 낮춤
-            Vector3 direction = (playerPosition + offset) - transform.position;
-            Quaternion rotation = Quaternion.LookRotation(direction);
-
-            // 총알을 생성하고 발사
-            Vector3 offset_2 = new Vector3(0f, 2.1f, 1f);
-            GameObject bullet = Instantiate(bulletPrefab, transform.position + offset_2, rotation);
-
-            // 커지는 효과와 발사를 위해 코루틴을 시작
-            StartCoroutine(EnlargeAndShoot(bullet, 1f, direction));
+            bulletFake.SetActive(false);
+            return;
         }
+
+        bulletFake.transform.DOScale(maxSize, growDuration)
+            .OnComplete(() =>
+            {
+                bulletFake.SetActive(false);
+                if (!doDie)
+                {
+                    ShotBullet(); // 고양이가 죽은 상태이면 공격하면 안됨
+                }
+
+            });
     }
 
-    private IEnumerator EnlargeAndShoot(GameObject bullet, float enlargeTime, Vector3 direction)
+    public void ShotBullet()
     {
-        // 총알을 커지는 효과
-        float initialScale = 0.5f; // 초기 크기
-        float finalScale = 3f;    // 최종 크기
-        float elapsedTime = 0f;
+        // 플레이어 위치 값을 가져옴
+        Vector3 playerPosition = player.position;
+        Vector3 offset = new Vector3(0f, -1.2f, 0f); // 아래로 1 단위만큼 내리는 오프셋 // 총알이 목표로 하는 위치를 낮춤
+        Vector3 direction = (playerPosition + offset) - transform.position;
+        Quaternion rotation = Quaternion.LookRotation(direction);
 
-        while (elapsedTime < enlargeTime)
-        {
-            float t = elapsedTime / enlargeTime;
-            float scale = Mathf.Lerp(initialScale, finalScale, t);
-
-            bullet.transform.localScale = new Vector3(scale, scale, scale);
-
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-
+        GameObject bullet = Instantiate(bulletPrefab, positon_Bullet.position, rotation);
         Rigidbody bulletRb = bullet.GetComponent<Rigidbody>();
 
         // 총알에 힘을 가해 발사 (원하는 힘과 방향으로 수정해야 함)
-        float bulletSpeed = 10f; // 총알 발사 속도
         bulletRb.velocity = direction.normalized * bulletSpeed;
 
         // 총알을 발사한 후 몇 초 후에 자동으로 삭제 (원하는 시간으로 수정 가능)
         float bulletDestroyDelay = 5f; // 몇 초 후에 삭제할지 설정
         Destroy(bullet, bulletDestroyDelay);
+
+
+        Invoke("CanAttack", 1.5f);
+    }
+
+
+    private void CanAttack()
+    {
+        isAttack = false;
+    }
+
+
+
+    public void StartLowering()
+    {
+        StartCoroutine(LowerObjectCoroutine(10f));
+    }
+
+    private IEnumerator LowerObjectCoroutine(float loweringSpeed)
+    {
+        float groundCheckDistance = 0.1f; // 바닥과의 거리 확인
+        Vector3 lowerDirection = Vector3.down;
+
+        while (true)
+        {
+            // 현재 위치에서 아래쪽으로 Ray를 쏘아 바닥과의 거리를 확인
+            Ray ray = new Ray(transform.position, lowerDirection);
+            RaycastHit hit;
+
+            // 레이캐스트를 통해 바닥과의 거리를 확인
+            if (Physics.Raycast(ray, out hit, groundCheckDistance))
+            {
+                // 만약 바닥과의 거리가 groundCheckDistance 이하라면 이동을 멈춤
+                break;
+            }
+
+            transform.position += lowerDirection * loweringSpeed * Time.deltaTime;
+            yield return null;
+        }
     }
 
 }

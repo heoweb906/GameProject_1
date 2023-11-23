@@ -16,10 +16,6 @@ public class LobbyManager : MonoBehaviour
 
 
 
-        playerInformation.MouseSpeed = 0.5f;
-        playerInformation.VolumeBGM = 0.3f;
-        playerInformation.VolumeEffect = 0.3f;
-
         PlayerPrefs.SetInt("PlayerHp", 4);
     }
 

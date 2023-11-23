@@ -108,10 +108,6 @@ public class GameManager : MonoBehaviour
     {
         ShowBulletCount();
         ShowComboGauge();
-        //if (playerInformation.IsGame)
-        //{
-            
-        //}
     }
 
     private void FixedUpdate()

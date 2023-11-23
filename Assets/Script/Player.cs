@@ -88,7 +88,7 @@ public class Player : MonoBehaviour
 
 
     // #. 애니메이터 관련
-    public Animator gunAnimator;
+    public Animator anim_Gun;
     Vector3 moveVec; // 플레이어의 이동 값
 
     // #. 레이어 변경 관련
@@ -112,9 +112,6 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
-        
-
-
         hp = PlayerPrefs.GetInt("PlayerHp");
 
 
@@ -157,6 +154,26 @@ public class Player : MonoBehaviour
                 }
             }
         }
+
+
+
+
+        // 치트키 ~~~~~~~~~~~~~~~
+        // 치트키 ~~~~~~~~~~~~~~~
+        // 치트키 ~~~~~~~~~~~~~~~
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            hp = 4;
+            PlayerPrefs.SetInt("PlayerHp", 4);
+            gameManager.ActivateHpImage(4);
+        }
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            PlayerPrefs.SetInt("Stage_1_MaxFloor", 1);
+        }
+        // 치트키 ~~~~~~~~~~~~~~~
+        // 치트키 ~~~~~~~~~~~~~~~
+        // 치트키 ~~~~~~~~~~~~~~~
     }
 
     private void FixedUpdate()
@@ -221,6 +238,7 @@ public class Player : MonoBehaviour
                 WeaponChange(key_weapon);
             }
         }
+
 
 
 
@@ -342,6 +360,17 @@ public class Player : MonoBehaviour
                         }
                     }
 
+
+                    ElevatorButton button = hit.collider.GetComponent<ElevatorButton>();
+                    if (button != null)
+                    {
+                        if (button.numColor == weaponNumber)
+                        {
+                            button.PushButton();
+                        }
+                    }
+
+
                 }
 
 
@@ -367,8 +396,7 @@ public class Player : MonoBehaviour
                     }
                 }
 
-
-                gunAnimator.SetTrigger("Fire");
+                anim_Gun.SetTrigger("Fire");
                 soundGun.Play(); 
             }
         }
@@ -405,10 +433,16 @@ public class Player : MonoBehaviour
         if (rDown && gameManager.rhythmCorrect && gameManager.b_ActionCnt)
         {
             gameManager.b_ActionCnt = false;
-            StartCoroutine(SetBoolAfterDelay(0.2f));
 
             gameManager.bulletCount = 10;
-            soundReload_Out.Play();
+
+            // #. 애니메이션 시간 때문에 한 틱 동안 입력을 안 받음
+            StartCoroutine(SetBoolAfterDelay(0.7f));
+
+            // #. 애니메이션 시간 때문에 한 틱 동안 입력을 안 받음
+            StartCoroutine(SetBoolAfterDelay(0.7f));
+            anim_Gun.SetTrigger("Reload");
+
         }
     }
 
@@ -521,33 +555,51 @@ public class Player : MonoBehaviour
             {
                 weaponNumber = 1;
                 playerInformation.WeponColor = 1;
-                weapon1.SetActive(true);
-                weapon2.SetActive(false);
-                weapon3.SetActive(false);
             }
             if (number == 2)
             {
                 weaponNumber = 2;
                 playerInformation.WeponColor = 2;
-                weapon1.SetActive(false);
-                weapon2.SetActive(true);
-                weapon3.SetActive(false);
             }
             if (number == 3)
             {
                 weaponNumber = 3;
                 playerInformation.WeponColor = 3;
-                weapon1.SetActive(false);
-                weapon2.SetActive(false);
-                weapon3.SetActive(true);
             }
 
-            gameManager.b_ActionCnt = false;
-            StartCoroutine(SetBoolAfterDelay(0.2f));
+            Invoke("WeaponChangeAssist",0.3f);
 
+            gameManager.b_ActionCnt = false;
             gameManager.ActivateImage(number);
             soundReload_In.Play();
+
+            // #. 애니메이션 시간 때문에 한 틱 동안 입력을 안 받음
+            StartCoroutine(SetBoolAfterDelay(0.7f));
+            anim_Gun.SetTrigger("Color");
+
         }
+    }
+    public void WeaponChangeAssist()
+    {
+        if(weaponNumber == 1)
+        {
+            weapon1.SetActive(true);
+            weapon2.SetActive(false);
+            weapon3.SetActive(false);
+        }
+        if (weaponNumber == 2)
+        {
+            weapon1.SetActive(false);
+            weapon2.SetActive(true);
+            weapon3.SetActive(false);
+        }
+        if (weaponNumber == 3)
+        {
+            weapon1.SetActive(false);
+            weapon2.SetActive(false);
+            weapon3.SetActive(true);
+        }
+
     }
 
     public void WeaponChange_SceneChange(int number)    // 씬이 전환될 때 들고 있던 무기의 정보가 이어지도록 하기 위한 함수

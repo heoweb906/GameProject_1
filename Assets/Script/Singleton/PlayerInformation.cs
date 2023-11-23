@@ -17,6 +17,11 @@ public class PlayerInformation : MonoBehaviour
     [SerializeField]private float volume_BGM;  // 배경음악 크기 정보
     [SerializeField]private float volume_Effect;  // 효과음 크기 정보
 
+
+    [SerializeField]private int elevator_1;  // 1번 엘리베이터 정보
+
+
+
     // 프로퍼티를 통한 값 액세스
     public bool IsGame { get { return isGame; } set { isGame = value; } }
     public bool IsMenu { get { return isMenu; } set { isMenu = value; } }
@@ -25,6 +30,8 @@ public class PlayerInformation : MonoBehaviour
     public float MouseSpeed { get { return mouseSpeed; } set { mouseSpeed = value; }}
     public float VolumeBGM { get { return volume_BGM; } set { volume_BGM = value; }}
     public float VolumeEffect { get { return volume_Effect; } set { volume_Effect = value; }}
+
+    public int Elevator_1 { get { return elevator_1; } set { elevator_1 = value; }}
 
     // 싱글톤 인스턴스에 접근할 수 있는 프로퍼티
     public static PlayerInformation Instance

@@ -111,6 +111,8 @@ public class TimingUIControl : MonoBehaviour
 
         Image timingIcon_ = Instantiate(timingIcon, position_timingIcon.position, Quaternion.identity);
         timingIcon_.transform.SetParent(position_timingIcon.transform);
+
+        timingIcon_.transform.localScale = Vector3.one;
         timingIcon_.rectTransform.anchoredPosition = Vector2.zero;
         Tweener timingIcon_main = timingIcon_.rectTransform.DOAnchorPosX(moveDistance, iconSpeed).SetEase(Ease.Linear);
 
@@ -296,10 +298,12 @@ public class TimingUIControl : MonoBehaviour
 
     public void SceneTurnMenu()
     {
+        gameManager.iconOn = false;
+
         gameManager.soundTime.Stop();
 
         gameManager.bulletCount = 10; // 게임 첫 시작시의 총알
-        gameManager.soundManager.Play();
+        //gameManager.soundManager.Play();
         gameManager.GameStart();
         playerInformation.IsMenu = false;
         playerInformation.IsGame = true;

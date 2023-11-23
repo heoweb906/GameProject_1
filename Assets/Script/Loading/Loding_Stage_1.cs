@@ -37,7 +37,37 @@ public class Loding_Stage_1 : MonoBehaviour
     IEnumerator LoadScene()
     {
         yield return null;
-        AsyncOperation operation = SceneManager.LoadSceneAsync("Play1");
+
+        //if(playerInformation.Elevator_1 == 1)
+
+        AsyncOperation operation = null;
+
+        if (playerInformation.Elevator_1 == 1)
+        {
+            operation = SceneManager.LoadSceneAsync("Play1");
+        }
+        else if (playerInformation.Elevator_1 == 2)
+        {
+            operation = SceneManager.LoadSceneAsync("Play2");
+        }
+        else if (playerInformation.Elevator_1 == 3)
+        {
+            operation = SceneManager.LoadSceneAsync("Play3");
+        }
+        else if (playerInformation.Elevator_1 == 4)
+        {
+            operation = SceneManager.LoadSceneAsync("Play4");
+        }
+        else if (playerInformation.Elevator_1 == 5)
+        {
+            operation = SceneManager.LoadSceneAsync("Play5");
+        }
+        else
+        {
+            // 기본적으로 로드할 씬 설정
+            operation = SceneManager.LoadSceneAsync("DefaultScene");
+        }
+
         operation.allowSceneActivation = false;
 
         while (!(operation.isDone))

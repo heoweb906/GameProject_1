@@ -24,7 +24,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Timing.unity
     guid: 0f3454914ce5cbb45b0ec33ee03d1b2c
   - enabled: 1
-    path: Assets/Scenes/Loading/Loading_Stage_1.unity
+    path: Assets/Scenes/Loading/Loading_Stage.unity
     guid: 5f0e2e3dba9392f4b9dd1f53f2d5ac03
   - enabled: 1
     path: Assets/Scenes/Play1.unity
@@ -35,6 +35,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Play3.unity
     guid: 71637745b5eede74e896f794e17b0b9b
+  - enabled: 1
+    path: Assets/Scenes/Play4.unity
+    guid: 196415287f7fb8548af2f7b377f8c463
+  - enabled: 1
+    path: Assets/Scenes/Play5.unity
+    guid: 1445933dc74b82c4293533787a81c819
   - enabled: 1
     path: Assets/Scenes/Boss.unity
     guid: 136657269c9e06a42932dbf40bb04b07

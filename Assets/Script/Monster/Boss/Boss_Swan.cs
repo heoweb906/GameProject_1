@@ -134,77 +134,86 @@ public class Boss_Swan : MonoBehaviour
         transform.position = position_nest[0].position;
         nowpositionNum = 0;
 
-        Invoke("BossStart",3f);
+
+        //Invoke("BossStart",3f);
     }
+
+
     public void BossStart()
     {
         isBossStart = true;
+
+        Invoke("MoveBoss", 3f);
+
+        // 여기서 최로로 실행하는 함수를 Invoke()로 하더록 수정 해야 함
+        // 각 패턴 함수들이 패턴 종료 시 다음 패턴 함수를 호출해야함
+        // 현재 코루틴 함수 정보도 담아야 함
     }
 
     private void FixedUpdate()
     {
-        BoosAlgorithm();
+        //BoosAlgorithm();
     }
 
 
-    // #. 보스 알고리즘
-    private void BoosAlgorithm()
+
+    // #. 보스 알고리즘 (신버전)
+    // 1 - 이동 관련 패턴 / 2 - 공격 관련 패턴
+
+    private void NextBossPattern_Move()
     {
-        if (isBossStart && !isColorChanged)
+        int randomFunction = Random.Range(1, 11);
+
+        if (randomFunction <= 2)
         {
-            if (!isPattern && nowPatternNum == 1)
-            {
-                isPattern = true;
-                nowPatternNum = 2;
-
-                // 패턴 사용 확률 - 현재 모빌 패턴은 나오지 않도록 설정되어 있음
-                int randomFunction = Random.Range(61, 101);
-                if(randomFunction  <= 5) 
-                {
-                    Debug.Log("모빌 생성");
-                    ShootMobile();
-                }
-                else if(6 <= randomFunction  && randomFunction <= 10)
-                {
-                    Debug.Log("즉사기 시작");
-                    ShootDiePlate();
-                }
-                else if (11 <= randomFunction && randomFunction <= 60)
-                {
-                    Debug.Log("유도탄 생성");
-                    ShootColorBullet();
-                }
-                else if (61 <= randomFunction && randomFunction <= 100)
-                {
-                    Debug.Log("가시 생성");
-                    ShootThorn();
-                }
-            }
-
-            if (!isPattern && nowPatternNum == 2)
-            {
-                isPattern = true;
-                nowPatternNum = 1;
-
-                int randomFunction = Random.Range(1, 11);
-                if (randomFunction <= 2)
-                {
-                    Debug.Log("돌진");
-                    RushBoss();
-                }
-                else if(3 <= randomFunction)
-                {
-                    Debug.Log("이동");
-                    MoveBoss();
-                }
-            }
+            Debug.Log("돌진");
+            Invoke("RushBoss", 1.5f);
+            //RushBoss();
+        }
+        else if (3 <= randomFunction)
+        {
+            Debug.Log("이동");
+            Invoke("MoveBoss", 1.5f);
+            //MoveBoss();
         }
     }
-    private void PatternOff()
+
+    private void NextBossPattern_Attack()
     {
-        isPattern = false;
+        // 패턴 사용 확률 - 현재 모빌 패턴은 나오지 않도록 설정되어 있음
+        int randomFunction = Random.Range(61, 101);
+
+        
+        if (randomFunction <= 5)
+        {
+            Debug.Log("모빌 생성");
+            Invoke("ShootMobile",1.5f);
+            //ShootMobile();
+        }
+        else if (6 <= randomFunction && randomFunction <= 10)
+        {
+            Debug.Log("즉사기 시작");
+            Invoke("ShootDiePlate", 1.5f);
+            //ShootDiePlate();
+        }
+        else if (11 <= randomFunction && randomFunction <= 60)
+        {
+            Debug.Log("유도탄 생성");
+            Invoke("ShootColorBullet", 1.5f);
+            //ShootColorBullet();
+        }
+        else if (61 <= randomFunction && randomFunction <= 100)
+        {
+            Debug.Log("가시 생성");
+            Invoke("ShootThorn", 1.5f);
+            //ShootThorn();
+        }
     }
 
+
+
+
+  
 
     // #. 데미지 받음 함수 , 절대 private로 하지 마라
     public void TakeDamage(int damageAmount)
@@ -239,7 +248,6 @@ public class Boss_Swan : MonoBehaviour
 
             if (takeDamage >= 200)  // 체력이 일정 수준 이하가 되면
             {
-                isPattern = true;
                 isColorChanged = true;
                 BackNestBoss();
             }
@@ -380,8 +388,8 @@ public class Boss_Swan : MonoBehaviour
         LookAtCenterWithTween();
 
         yield return new WaitForSeconds(3.0f);
-        Invoke("PatternOff", 3f);
-        yield return new WaitForSeconds(3.0f);
+  
+        NextBossPattern_Attack();
     }
     int AsistNum_MoveBoss(int startindex, int endindex)
     {
@@ -568,8 +576,9 @@ public class Boss_Swan : MonoBehaviour
         LookAtCenterWithTween();
 
         yield return new WaitForSeconds(3.0f);
-        Invoke("PatternOff", 3f);
-        yield return new WaitForSeconds(3.0f);
+  
+
+        NextBossPattern_Attack();
     }
     int AsistNum_RushBoss(int nowpositionNum)
     {
@@ -647,7 +656,10 @@ public class Boss_Swan : MonoBehaviour
         yield return new WaitForSeconds(3.0f);
         Debug.Log("색상 변경을 완료합니다");
         isColorChanged = false;
-        Invoke("PatternOff", 3f);
+
+
+
+        NextBossPattern_Move();
     }
     public IEnumerator MoveToPosition(Vector3 targetPosition)
     {
@@ -700,7 +712,6 @@ public class Boss_Swan : MonoBehaviour
 
 
 
-
     // #. 모빌 떨어뜨리기 공격 - 1
     private void ShootMobile()
     {
@@ -735,8 +746,10 @@ public class Boss_Swan : MonoBehaviour
         }
 
         yield return new WaitForSeconds(3.0f);
-        Invoke("PatternOff", 3f);
+
+        NextBossPattern_Move();
     }
+
 
     // #. 즉사기 패턴 - 2
     private void ShootDiePlate()
@@ -777,9 +790,10 @@ public class Boss_Swan : MonoBehaviour
 
        
         yield return new WaitForSeconds(3.0f);
-        Invoke("PatternOff", 3f);
 
+        NextBossPattern_Move();
     }
+
 
     // #. 유도탄 공격 - 3
     private void ShootColorBullet()
@@ -815,9 +829,11 @@ public class Boss_Swan : MonoBehaviour
             }
 
             yield return new WaitForSeconds(3.0f);
-            Invoke("PatternOff", 3f);
+
+            NextBossPattern_Move();
         }
     }
+
 
     // #. 가시 장판 공격 - 4
     private void ShootThorn()
@@ -864,11 +880,9 @@ public class Boss_Swan : MonoBehaviour
             GameObject thorn_ = Instantiate(thorn, originalPosition, Quaternion.identity);
         }
 
-        
         yield return new WaitForSeconds(3.0f);
-        Invoke("PatternOff", 3f);
+        NextBossPattern_Move();
     }
-
 
 
     // 맵 중앙을 보도록 하는 함수
@@ -907,5 +921,64 @@ public class Boss_Swan : MonoBehaviour
     }
 
 
+
+
+    // #. 보스 알고리즘 (구버전)
+    private void BoosAlgorithm()
+    {
+        if (isBossStart && !isColorChanged)
+        {
+            if (!isPattern && nowPatternNum == 1)
+            {
+                isPattern = true;
+                nowPatternNum = 2;
+
+                // 패턴 사용 확률 - 현재 모빌 패턴은 나오지 않도록 설정되어 있음
+                int randomFunction = Random.Range(61, 101);
+                if (randomFunction <= 5)
+                {
+                    Debug.Log("모빌 생성");
+                    ShootMobile();
+                }
+                else if (6 <= randomFunction && randomFunction <= 10)
+                {
+                    Debug.Log("즉사기 시작");
+                    ShootDiePlate();
+                }
+                else if (11 <= randomFunction && randomFunction <= 60)
+                {
+                    Debug.Log("유도탄 생성");
+                    ShootColorBullet();
+                }
+                else if (61 <= randomFunction && randomFunction <= 100)
+                {
+                    Debug.Log("가시 생성");
+                    ShootThorn();
+                }
+            }
+
+            if (!isPattern && nowPatternNum == 2)
+            {
+                isPattern = true;
+                nowPatternNum = 1;
+
+                int randomFunction = Random.Range(1, 11);
+                if (randomFunction <= 2)
+                {
+                    Debug.Log("돌진");
+                    RushBoss();
+                }
+                else if (3 <= randomFunction)
+                {
+                    Debug.Log("이동");
+                    MoveBoss();
+                }
+            }
+        }
+    }
+    private void PatternOff()
+    {
+        isPattern = false;
+    }
 
 }
