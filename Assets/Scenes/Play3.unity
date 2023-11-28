@@ -280,10 +280,11 @@ MonoBehaviour:
   - {fileID: 654284461}
   - {fileID: 433687151}
   - {fileID: 1479230823}
-  - {fileID: 0}
+  - {fileID: 782153340}
   - {fileID: 1835687549}
   - {fileID: 76064636}
   - {fileID: 143094497}
+  - {fileID: 1363867124}
   fadeTime: 1.5
 --- !u!1 &34403548
 GameObject:

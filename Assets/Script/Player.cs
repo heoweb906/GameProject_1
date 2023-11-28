@@ -185,9 +185,7 @@ public class Player : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.U))  // 플레이어 체력을 4로
         {
-            hp = 4;
-            PlayerPrefs.SetInt("PlayerHp", 4);
-            gameManager.ActivateHpImage(4);
+            HpUp(4);
         }
         if (Input.GetKeyDown(KeyCode.I))  // 현재 클리어 정보를 초기화
         {
@@ -683,7 +681,16 @@ public class Player : MonoBehaviour
         Cursor.lockState = CursorLockMode.None; // 마우스 커서의 제한을 해제합니다.
     }
 
-
+    public void HpUp(int score)
+    {
+        hp += score + 1;
+        if(hp > 4)
+        {
+            hp = 4;
+        }
+        PlayerPrefs.SetInt("PlayerHp", hp);
+        gameManager.ActivateHpImage(hp);
+    }
 
 
     private void OnCollisionEnter(Collision collision)

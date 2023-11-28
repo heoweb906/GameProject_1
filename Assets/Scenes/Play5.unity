@@ -8257,12 +8257,13 @@ MonoBehaviour:
   stageAlrms:
   - {fileID: 823007785}
   - {fileID: 465500997}
-  - {fileID: 0}
   - {fileID: 2104387435}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 569947137}
+  - {fileID: 1193124077}
+  - {fileID: 1780545945}
   - {fileID: 73073205}
   - {fileID: 1635836017}
+  - {fileID: 926805224}
   fadeTime: 1.5
 --- !u!1 &1455246562
 GameObject:

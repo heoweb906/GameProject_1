@@ -6224,6 +6224,7 @@ MonoBehaviour:
   - {fileID: 40209524}
   - {fileID: 1577139500}
   - {fileID: 1583098228}
+  - {fileID: 1984003865}
   fadeTime: 1.5
 --- !u!1 &1171307181
 GameObject:

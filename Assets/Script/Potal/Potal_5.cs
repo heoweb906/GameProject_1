@@ -49,7 +49,7 @@ public class Potal_5 : MonoBehaviour
         if (other.CompareTag("Player")) // "Player" 태그를 가진 오브젝트와 충돌했을 때
         {
             Debug.Log("다음 스테이지로 이동합니다.");
-            SceneManager.LoadScene("Play1"); // Play 씬 1로 
+            SceneManager.LoadScene("Play6"); // Play 씬 1로 
         }
     }
 }

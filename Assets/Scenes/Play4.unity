@@ -2925,12 +2925,13 @@ MonoBehaviour:
   stageAlrms:
   - {fileID: 300886356}
   - {fileID: 1685762653}
-  - {fileID: 0}
   - {fileID: 41023176}
-  - {fileID: 0}
+  - {fileID: 841746585}
+  - {fileID: 311288016}
   - {fileID: 1576289769}
   - {fileID: 1926066023}
   - {fileID: 817040956}
+  - {fileID: 1980772611}
   fadeTime: 1.5
 --- !u!1 &483266483
 GameObject:
