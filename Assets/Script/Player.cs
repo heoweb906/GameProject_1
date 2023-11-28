@@ -59,7 +59,8 @@ public class Player : MonoBehaviour
     public AudioSource soundRoll; // 구르기 소리
 
     [Header("이펙트 관련")]
-    public ParticleSystem effect_PistolShot;
+    public ParticleSystem effect_Pistol;
+    public ParticleSystem effect_Minigun;
 
 
     [Header("FEEL 관련")]
@@ -98,6 +99,23 @@ public class Player : MonoBehaviour
 
     // #. 레이 관련
     private Vector3 rayDirection; // 레이캐스트가 발사된 방향을 저장하는 변수
+
+
+
+
+
+
+
+
+
+
+    // #. 치트 관련 기능
+    private bool b_invin = false;
+
+
+
+
+
 
 
     private void Awake()
@@ -161,13 +179,17 @@ public class Player : MonoBehaviour
         // 치트키 ~~~~~~~~~~~~~~~
         // 치트키 ~~~~~~~~~~~~~~~
         // 치트키 ~~~~~~~~~~~~~~~
-        if (Input.GetKeyDown(KeyCode.U))
+        if (Input.GetKeyDown(KeyCode.Y))  // 플레이어 체력을 4로
+        {
+            b_invin = !b_invin;
+        }
+        if (Input.GetKeyDown(KeyCode.U))  // 플레이어 체력을 4로
         {
             hp = 4;
             PlayerPrefs.SetInt("PlayerHp", 4);
             gameManager.ActivateHpImage(4);
         }
-        if (Input.GetKeyDown(KeyCode.I))
+        if (Input.GetKeyDown(KeyCode.I))  // 현재 클리어 정보를 초기화
         {
             PlayerPrefs.SetInt("Stage_1_MaxFloor", 1);
         }
@@ -330,7 +352,7 @@ public class Player : MonoBehaviour
                 Debug.DrawRay(ray.origin, ray.direction * attackRange, hasHit ? Color.red : Color.green, 0.1f); // 레이 시각화
                 gameManager.bulletCount--;
 
-                effect_PistolShot.Play();
+                effect_Pistol.Play();
 
                 gameManager.b_ActionCnt = false;
                 StartCoroutine(SetBoolAfterDelay(0.2f));
@@ -451,36 +473,40 @@ public class Player : MonoBehaviour
 
     public void OnDamage(int dmg) // 데미지를 받았을 때의 함수, 몬스터들이 사용할 수 있도록 public으로 함
     {
-        if (hp >= 1 && !isDie && !isDamaging)
+        if(!b_invin) // 무적이 아닐때만
         {
-            isDamaging = true;
-            hp -= dmg;
-            gameManager.ActivateHpImage(hp);
-
-
-            mmfPlayer_OnDamage?.PlayFeedbacks();
-
-            // 레이어 변경이 진행 중이지 않을 때만 실행
-            if (!isChangingLayer)
+            if (hp >= 1 && !isDie && !isDamaging)
             {
-                StartCoroutine(ChangeLayerTemporarily());
+                isDamaging = true;
+                hp -= dmg;
+                gameManager.ActivateHpImage(hp);
+
+
+                mmfPlayer_OnDamage?.PlayFeedbacks();
+
+                // 레이어 변경이 진행 중이지 않을 때만 실행
+                if (!isChangingLayer)
+                {
+                    StartCoroutine(ChangeLayerTemporarily());
+                }
+
+                // 플레이어의 hp 정보를 저장
+                PlayerPrefs.SetInt("PlayerHp", hp);
             }
 
-            // 플레이어의 hp 정보를 저장
-            PlayerPrefs.SetInt("PlayerHp", hp);
-        }
-
-        // #. 죽음 함수 기능
-        if(hp <= 0 && !isDie)
-        {
-            isDie = true;
-            if(ingame_UI.isSettingPanel)
+            // #. 죽음 함수 기능
+            if (hp <= 0 && !isDie)
             {
-                ingame_UI.OnOffSettingPanel_PlayerDie();  // 죽으면 활성화되어 있는 설정창을 꺼줌
-            }
+                isDie = true;
+                if (ingame_UI.isSettingPanel)
+                {
+                    ingame_UI.OnOffSettingPanel_PlayerDie();  // 죽으면 활성화되어 있는 설정창을 꺼줌
+                }
 
-            PlayerDie();
+                PlayerDie();
+            }
         }
+        
     }
 
     private IEnumerator ChangeLayerTemporarily()

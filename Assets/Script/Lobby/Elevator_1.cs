@@ -20,7 +20,7 @@ public class Elevator_1 : MonoBehaviour
 
     public void FloorUp()
     {
-        if(nowFloor < maxFloor) // 이거 maxFloor로 바꿔야 함
+        if(nowFloor < maxFloor) 
         {
             nowFloor++;
             ActivateObjectAtIndex(nowFloor - 1);

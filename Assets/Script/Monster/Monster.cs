@@ -25,6 +25,11 @@ public class Monster : MonoBehaviour
     private Material monsterMaterial; // 몬스터의 머티리얼 추가
 
 
+
+   
+
+
+
     private void Awake()
     {
         gameManager = FindObjectOfType<GameManager>(); // GameManager를 찾아서 할당
@@ -43,6 +48,16 @@ public class Monster : MonoBehaviour
 
     public void TakeDamage(int damageAmount)
     {
+        if (renderer != null)
+        {
+            monsterMaterial = renderer.material;
+            originalColor = monsterMaterial.GetColor("_BaseColor"); // 원래 색상 저장
+        }
+        else
+        {
+            Debug.LogError("Renderer 컴포넌트를 찾을 수 없습니다.");
+        }
+
         currentHealth -= damageAmount;
         renderer.material.color = Color.black;
 
