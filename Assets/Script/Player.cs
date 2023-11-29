@@ -53,10 +53,12 @@ public class Player : MonoBehaviour
     [Header("사운드")]
     public AudioSource soundGun; // 총소리
     public AudioSource soundGun_Fail; // 리듬 맞추기 실패 공격
-    public AudioSource soundReload_In; // 장전 소리 (탄창 장착)
-    public AudioSource soundReload_Out; // 장전 소리 (탄창 장착)
-    public AudioSource soundMiniGun; // 구르기 소리
+    public AudioSource soundReload; // 장전 소리 (탄창 장착)
+    public AudioSource soundNotBullet; // 총알 없을 때 나는 소리
     public AudioSource soundRoll; // 구르기 소리
+    public AudioSource soundColorChange; // 구르기 소리
+    public AudioSource soundMiniGun; // 미니건 소리
+   
 
     [Header("이펙트 관련")]
     public ParticleSystem effect_Pistol;
@@ -339,8 +341,11 @@ public class Player : MonoBehaviour
 
     private void Attack()
     {
+       
+
         if (Input.GetButtonDown("Fire1") && gameManager.rhythmCorrect && !isDie && gameManager.b_ActionCnt)
-        {
+        {            
+
             if (gameManager.bulletCount > 0)
             {
                 Ray ray = new Ray(mainCamera.transform.position, mainCamera.transform.forward );
@@ -393,7 +398,6 @@ public class Player : MonoBehaviour
 
                 }
 
-
                 if (hasHit &&  hit.collider.CompareTag("Boss"))
                 {
                     // 부모 또는 자식 오브젝트의 콜라이더를 검사
@@ -416,14 +420,27 @@ public class Player : MonoBehaviour
                     }
                 }
 
+
                 anim_Gun.SetTrigger("Fire");
-                soundGun.Play(); 
+                soundGun.Play();
+            }
+            else
+            {
+                soundNotBullet.Play();
             }
         }
         else if(Input.GetButtonDown("Fire1") && !(gameManager.rhythmCorrect))   // 만약 틀린 타이밍에 공격하면
         {
             gameManager.ComboBarDown();
-            soundGun_Fail.Play();
+
+            if(gameManager.bulletCount > 0)
+            {
+                soundGun_Fail.Play();
+            }else
+            {
+                soundNotBullet.Play();
+            }
+           
         }
     }
 
@@ -463,7 +480,13 @@ public class Player : MonoBehaviour
             StartCoroutine(SetBoolAfterDelay(0.7f));
             anim_Gun.SetTrigger("Reload");
 
+
+            Invoke("SoundReload", 0.1f);
         }
+    }
+    private void SoundReload()
+    {
+        soundReload.Play();
     }
 
 
@@ -591,11 +614,14 @@ public class Player : MonoBehaviour
                 playerInformation.WeponColor = 3;
             }
 
+
+            Invoke("WeaponChangeSound", 0.1f);
             Invoke("WeaponChangeAssist",0.3f);
+            
 
             gameManager.b_ActionCnt = false;
             gameManager.ActivateImage(number);
-            soundReload_In.Play();
+            
 
             // #. 애니메이션 시간 때문에 한 틱 동안 입력을 안 받음
             StartCoroutine(SetBoolAfterDelay(0.7f));
@@ -623,7 +649,10 @@ public class Player : MonoBehaviour
             weapon2.SetActive(false);
             weapon3.SetActive(true);
         }
-
+    }
+    public void WeaponChangeSound()
+    {
+        soundColorChange.Play();
     }
 
     public void WeaponChange_SceneChange(int number)    // 씬이 전환될 때 들고 있던 무기의 정보가 이어지도록 하기 위한 함수
@@ -662,10 +691,11 @@ public class Player : MonoBehaviour
     {
         soundGun.volume = playerInformation.VolumeEffect;
         soundGun_Fail.volume = playerInformation.VolumeEffect;
-        soundReload_In.volume = playerInformation.VolumeEffect;
-        soundReload_Out.volume = playerInformation.VolumeEffect;
-        soundMiniGun.volume = playerInformation.VolumeEffect;
+        soundReload.volume = playerInformation.VolumeEffect;
+        soundNotBullet.volume = playerInformation.VolumeEffect;
         soundRoll.volume = playerInformation.VolumeEffect;
+        soundColorChange.volume = playerInformation.VolumeEffect;
+        soundMiniGun.volume = playerInformation.VolumeEffect;
     }
 
 
