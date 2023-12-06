@@ -23,7 +23,7 @@ public class Potal_6 : MonoBehaviour
     private void Start()
     {
         gameManager.bpmCount = 0;
-        PlayerPrefs.SetInt("Stage_1_MaxFloor", 5);
+        PlayerPrefs.SetInt("Stage_1_MaxFloor", 6);
     }
 
     private void Update()
@@ -43,7 +43,7 @@ public class Potal_6 : MonoBehaviour
         colliderBox.enabled = true;
 
 
-        //animDoor.SetTrigger("doDoor");
+        animDoor.SetTrigger("doDoor");
     }
 
     private void OnTriggerEnter(Collider other)
@@ -51,7 +51,7 @@ public class Potal_6 : MonoBehaviour
         if (other.CompareTag("Player")) // "Player" 태그를 가진 오브젝트와 충돌했을 때
         {
             Debug.Log("다음 스테이지로 이동합니다.");
-            SceneManager.LoadScene("Loading_Lobby"); // Play 씬 1로 
+            SceneManager.LoadScene("Play7"); // Play 씬 1로 
         }
     }
 }

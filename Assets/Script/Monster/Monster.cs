@@ -25,11 +25,6 @@ public class Monster : MonoBehaviour
     private Material monsterMaterial; // 몬스터의 머티리얼 추가
 
 
-
-   
-
-
-
     private void Awake()
     {
         gameManager = FindObjectOfType<GameManager>(); // GameManager를 찾아서 할당

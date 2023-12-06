@@ -63,6 +63,8 @@ public class UI_InGame : MonoBehaviour
 
     public void OnOffSettingPanel()
     {
+        player.clickButtonSound.Play();
+
         if (stageManager.MonsterCount > 0)
         {
             textPanel.SetActive(true);
@@ -127,6 +129,7 @@ public class UI_InGame : MonoBehaviour
 
     public void OnOffGameoverPanel()
     {
+
         player.CamUnlock();
         gameoverPanel.gameObject.SetActive(true);
     }
@@ -156,6 +159,8 @@ public class UI_InGame : MonoBehaviour
 
     public void OnOffTutorailPanel()
     {
+        player.clickButtonSound.Play();
+
         if (!isTutorialPanel)
         {
             isTutorialPanel = true;
@@ -171,6 +176,8 @@ public class UI_InGame : MonoBehaviour
 
     public void GoMenu()
     {
+        player.clickButtonSound.Play();
+
         UnlockCursor(); // 커서 락 해제
 
         PlayerPrefs.SetInt("PlayerHp", 4);
@@ -194,10 +201,15 @@ public class UI_InGame : MonoBehaviour
 
     public void QuitGame() // 게임 종료 버튼 클릭(게임 종료)
     {
+        player.clickButtonSound.Play();
+
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
         Application.Quit();
 #endif
     }
+
+
+   
 }

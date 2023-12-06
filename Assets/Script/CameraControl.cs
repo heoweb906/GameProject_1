@@ -14,6 +14,8 @@ public class CameraControl : MonoBehaviour
     public float turnSpeed; // 마우스 회전 속도    
     private float xRotate = 0.0f; // 내부 사용할 X축 회전량은 별도 정의 ( 카메라 위 아래 방향 )
 
+    public float tall;
+
     private void Start()
     {
         inGame_UI = FindAnyObjectByType<UI_InGame>();
@@ -33,10 +35,12 @@ public class CameraControl : MonoBehaviour
         if (target != null)
         {
             Vector3 desiredPosition = target.position + offset;
+            // Y 축에 어떤 값을 더해 타겟의 높이를 변경합니다.
+            desiredPosition.y += tall; 
             transform.position = desiredPosition;
         }
 
-        if(!(inGame_UI.isSettingPanel) && !(player.isDie))
+        if (!(inGame_UI.isSettingPanel) && !(player.isDie))
         {
             // 좌우로 움직인 마우스의 이동량 * 속도에 따라 카메라가 좌우로 회전할 양 계산
             float yRotateSize = Input.GetAxis("Mouse X") * turnSpeed;

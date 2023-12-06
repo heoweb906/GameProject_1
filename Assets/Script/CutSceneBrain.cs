@@ -109,6 +109,7 @@ public class CutSceneBrain : MonoBehaviour
     {
         cutIndex++;
 
+
         if (cutIndex < cutInfos.Length)
         {
             // 이전 컷 스킵
@@ -121,7 +122,7 @@ public class CutSceneBrain : MonoBehaviour
             // 현재 컷 보여주기
             cutInfos[cutIndex].DoEnter();
 
-            if (cutIndex == 30) // 마지막 컷신 순서
+            if (cutIndex == 32) // 마지막 컷신 순서
             {
                 StartCoroutine(DelayedBlinkText());
                 
@@ -140,6 +141,21 @@ public class CutSceneBrain : MonoBehaviour
             if (cutIndex == 7 || cutIndex == 10 || cutIndex == 12 || cutIndex == 29)  // 좌우로 기울이는 컷들
             {
                 cutInfos[cutIndex].DoLeftRightAnimation_Angle();
+            }
+
+
+            if (cutIndex == 32) // 32번째 이미지 처리
+            {
+                // 이미지 사이즈를 0으로 설정
+                cutInfos[cutIndex].CutRtf.sizeDelta = Vector2.zero;
+
+                // 이미지 크기를 100까지 빠르게 증가시키는 애니메이션 추가
+                cutInfos[cutIndex].CutRtf.DOSizeDelta(new Vector2(1240, 710), 0.3f);
+            }
+            else
+            {
+                // 32번째 이미지가 아닌 경우 기존 처리 방식 유지
+                cutInfos[cutIndex].DoEnter();
             }
 
 

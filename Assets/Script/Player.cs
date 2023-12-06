@@ -46,7 +46,7 @@ public class Player : MonoBehaviour
     public float attackRange = 50000.0f; // 공격 범위
 
     private float timeSinceLastAttack = 0f;  // FeverAttack
-    public float attackInterval = 0.5f; // everAttack Ray를 발사하는 주기
+    public float attackInterval = 0.3f; // everAttack Ray를 발사하는 주기
     [Space(10f)]
 
 
@@ -58,6 +58,7 @@ public class Player : MonoBehaviour
     public AudioSource soundRoll; // 구르기 소리
     public AudioSource soundColorChange; // 구르기 소리
     public AudioSource soundMiniGun; // 미니건 소리
+    public AudioSource clickButtonSound; // 버튼 클릭 소리
    
 
     [Header("이펙트 관련")]
@@ -66,24 +67,23 @@ public class Player : MonoBehaviour
 
 
     [Header("FEEL 관련")]
-    public MMF_Player mmfPlayer_Camera;
     public MMF_Player mmfPlayer_OnDamage;
     public MMF_Player mmfPlayer_OnDie;
-    // mmfPlayer_Camera?.PlayFeedbacks();
 
 
-    // #. 플레이어 키 입력
-    private bool jDown; // 점프 키
-    private bool wDown; // 웅크리기 키
-    private bool shiftDown; // 구르기 키
-    private bool rDown; // 재장전 키
-    private int key_weapon = 1;
+    // #. 플레이어 키 입력 
+    private bool jDown; // 점프 키 
+    private bool wDown; // 웅크리기 키 
+    private bool shiftDown; // 구르기 키 
+    private bool rDown; // 재장전 키 
+    private int key_weapon = 1; 
 
     // #. 플레이어 상태
     private bool isJumping; // 점프 중인지 여부를 나타내는 변수
     private bool isRolling; // 구르고 있는 중인지 여부를 나타내는 변수
     private bool isDamaging; // 공격을 받아 무적인 상태
     public bool isSafeZone; // 보스 즉사 장판기에서 안전한 장소에 있는지
+    public bool isStun; // 보스 즉사 장판기에서 안전한 장소에 있는지
 
     public Rigidbody rigid;
     public CameraControl mainCamera;
@@ -92,6 +92,7 @@ public class Player : MonoBehaviour
 
     // #. 애니메이터 관련
     public Animator anim_Gun;
+    public Animator anim_MiniGun;
     Vector3 moveVec; // 플레이어의 이동 값
 
     // #. 레이어 변경 관련
@@ -103,12 +104,14 @@ public class Player : MonoBehaviour
     private Vector3 rayDirection; // 레이캐스트가 발사된 방향을 저장하는 변수
 
 
+    // #. 돌진 블러 관련 변수
+    public RadialBlurImageEffect blueEffect;
+    public int rushBlur = 1; // 초기 값 설정
+    public float rayDistance = 1f; // 레이의 길이
 
 
-
-
-
-
+    // #. 경사로 검사
+    public bool isRamp;
 
 
     // #. 치트 관련 기능
@@ -133,6 +136,7 @@ public class Player : MonoBehaviour
     private void Start()
     {
         hp = PlayerPrefs.GetInt("PlayerHp");
+        gameManager.canRoll = true;
 
 
         CamLock(); // 게임 시작 시 카메라 락
@@ -155,13 +159,18 @@ public class Player : MonoBehaviour
     private void Update()
     {
         GetInput();
-        Move();
+
+        if (!isStun)
+        {
+            Move();
+        }
+       
         
-        if(!(gameManager.isFever))
+        if(!(gameManager.isFever) && !(ingame_UI.isSettingPanel))
         {
             Attack();
         }
-        else if(gameManager.isFever)
+        else if(gameManager.isFever && !(ingame_UI.isSettingPanel))
         {
             if (Input.GetButton("Fire1") && !isDie)
             {
@@ -173,12 +182,19 @@ public class Player : MonoBehaviour
                     timeSinceLastAttack = 0f; 
                 }
             }
+
+
+            if(Input.GetButtonUp("Fire1"))
+            {
+                Debug.Log("미니건 애니메이션을 종료합니다");
+                Invoke("StopMiniGunAnim",0.1f);
+            }
+                
         }
+        
 
 
 
-
-        // 치트키 ~~~~~~~~~~~~~~~
         // 치트키 ~~~~~~~~~~~~~~~
         // 치트키 ~~~~~~~~~~~~~~~
         if (Input.GetKeyDown(KeyCode.Y))  // 플레이어 체력을 4로
@@ -195,14 +211,16 @@ public class Player : MonoBehaviour
         }
         // 치트키 ~~~~~~~~~~~~~~~
         // 치트키 ~~~~~~~~~~~~~~~
-        // 치트키 ~~~~~~~~~~~~~~~
     }
 
     private void FixedUpdate()
     {
         // 플레이어에게 강한 중력을 줌
         rigid.AddForce(Vector3.down * 60f, ForceMode.Acceleration);
+
     }
+
+
 
 
 
@@ -281,10 +299,13 @@ public class Player : MonoBehaviour
         // Rigidbody에 속도 적용
         Vector3 newVelocity = transform.forward * moveVec.z * moveSpeed + transform.right * moveVec.x * moveSpeed;
         newVelocity.y = rigid.velocity.y; // 현재 수직 속도 유지
-        if(!isDie)
+
+        if (!isDie)
         {
             rigid.velocity = newVelocity;
         }
+
+
 
         // 점프 체크
         if (jDown && !isJumping)
@@ -304,6 +325,7 @@ public class Player : MonoBehaviour
     {
         gameManager.b_ActionCnt = false;
         StartCoroutine(SetBoolAfterDelay(0.2f));
+        StartCoroutine(EffectBlur());
 
         gameManager.canRoll = false;
         gameManager.rollSkill_Image.fillAmount = 0f;
@@ -311,7 +333,6 @@ public class Player : MonoBehaviour
 
         // 구르기 동안 이동 속도를 증가시키고, 방향은 현재 이동 방향으로 설정
         soundRoll.Play();
-        mmfPlayer_Camera?.PlayFeedbacks();
 
         float originalMoveSpeed = moveSpeed;
         moveSpeed = rollSpeed;
@@ -324,6 +345,48 @@ public class Player : MonoBehaviour
         moveSpeed = originalMoveSpeed;
         isRolling = false;
     }
+    private IEnumerator EffectBlur()
+    {
+        float raiseDuration = 0.2f; // 올라가는데 걸리는 시간
+        int endValue = 10; // 목표 값
+
+        float timer = 0.0f; // 경과 시간 초기화
+        int startValue = blueEffect.samples; // 현재 값 저장
+
+        // 올라가는 부분
+        while (timer < raiseDuration)
+        {
+            timer += Time.deltaTime; // 경과 시간 증가
+            float progress = timer / raiseDuration; // 진행률 계산
+
+            // 보간을 사용하여 값을 서서히 변경
+            blueEffect.samples = (int)Mathf.Lerp(startValue, endValue, progress);
+
+            yield return null; // 한 프레임씩 대기
+        }
+
+        blueEffect.samples = endValue; // 목표 값으로 설정
+
+
+        float lowerDuration = 0.2f; // 내려가는데 걸리는 시간
+        startValue = blueEffect.samples; // 현재 값 다시 저장
+
+        timer = 0.0f; // 경과 시간 초기화
+
+        // 내려오는 부분
+        while (timer < lowerDuration)
+        {
+            timer += Time.deltaTime; // 경과 시간 증가
+            float progress = timer / lowerDuration; // 진행률 계산
+
+            // 보간을 사용하여 값을 서서히 변경
+            blueEffect.samples = (int)Mathf.Lerp(startValue, 1, progress);
+
+            yield return null; // 한 프레임씩 대기
+        }
+
+        blueEffect.samples = 1; // 최종 값으로 설정
+    }
 
 
     private void Jump()
@@ -331,6 +394,20 @@ public class Player : MonoBehaviour
         isJumping = true;
         rigid.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
+
+
+
+    public void PushBackAndLift(float pushBackForce, float upwardForce, Vector3 direction)
+    {
+        rigid.AddForce(Vector3.up * upwardForce, ForceMode.Impulse);
+        rigid.AddForce(direction.normalized * pushBackForce, ForceMode.Impulse);
+        Invoke("RelaxStun",1f);
+    }
+    public void RelaxStun()
+    {
+        isStun = false;
+    }
+
 
 
     private IEnumerator SetBoolAfterDelay(float delay)
@@ -342,8 +419,7 @@ public class Player : MonoBehaviour
     private void Attack()
     {
        
-
-        if (Input.GetButtonDown("Fire1") && gameManager.rhythmCorrect && !isDie && gameManager.b_ActionCnt)
+        if (Input.GetButtonDown("Fire1") && gameManager.rhythmCorrect && !isDie && gameManager.b_ActionCnt && !(ingame_UI.isSettingPanel))
         {            
 
             if (gameManager.bulletCount > 0)
@@ -371,6 +447,15 @@ public class Player : MonoBehaviour
                         {
                             monster.TakeDamage(attackDamage);
                             gameManager.ComboBarBounceUp();
+                        }
+                    }
+
+                    Toruso toruso = hit.collider.GetComponent<Toruso>();
+                    if (toruso != null)
+                    {
+                        if (toruso.monsterColor == weaponNumber)
+                        {
+                            toruso.TakeDamage();
                         }
                     }
 
@@ -460,9 +545,40 @@ public class Player : MonoBehaviour
             {
                 monster.TakeDamage(attackDamage);
             }
+
+            // 부모 또는 자식 오브젝트의 콜라이더를 검사
+            Transform hitTransform = hit.collider.transform;
+            Boss_Swan boss = hitTransform.GetComponent<Boss_Swan>();
+
+            while (boss == null && hitTransform.parent != null)
+            {
+                hitTransform = hitTransform.parent;
+                boss = hitTransform.GetComponent<Boss_Swan>();
+            }
+
+            if (boss != null)
+            {
+                if (boss.monsterColor == weaponNumber)
+                {
+                    boss.TakeDamage(attackDamage);
+                    gameManager.ComboBarBounceUp();
+                }
+            }
         }
+
+        anim_MiniGun.SetTrigger("doShot");
+        effect_Minigun.Play();
         soundMiniGun.Play();
     }
+    void StopMiniGunAnim()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            anim_MiniGun.SetTrigger("doShotEnd");
+        }
+        
+    }
+    
 
     // #. 재장전 기능
     private void Reload()
@@ -596,7 +712,7 @@ public class Player : MonoBehaviour
 
     public void WeaponChange(int number) 
     {
-        if (gameManager.rhythmCorrect && gameManager.b_ActionCnt)
+        if (gameManager.rhythmCorrect && gameManager.b_ActionCnt && !(ingame_UI.isSettingPanel))
         {
             if (number == 1)
             {
@@ -722,6 +838,7 @@ public class Player : MonoBehaviour
         gameManager.ActivateHpImage(hp);
     }
 
+   
 
     private void OnCollisionEnter(Collision collision)
     {

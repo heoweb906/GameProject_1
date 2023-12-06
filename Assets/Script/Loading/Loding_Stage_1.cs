@@ -62,10 +62,17 @@ public class Loding_Stage_1 : MonoBehaviour
         {
             operation = SceneManager.LoadSceneAsync("Play5");
         }
-        else
+        else if (playerInformation.Elevator_1 == 6)
         {
-            // 기본적으로 로드할 씬 설정
-            operation = SceneManager.LoadSceneAsync("DefaultScene");
+            
+        }
+        else if (playerInformation.Elevator_1 == 7)
+        {
+
+        }
+        else if (playerInformation.Elevator_1 == 8)
+        {
+            operation = SceneManager.LoadSceneAsync("Boss");
         }
 
         operation.allowSceneActivation = false;

@@ -10,20 +10,15 @@ using UnityEngine.UI;
 
 // #. 기억!!!
 
-//
-// 보스 포인트 0에서 체력이 1/8로 깎여 색을 변경할 때 오류가 남
-//
-
-
-// 보스는 이동할 때를 제외하면 플레이어를 바라보지 않음, 6개의 각 포인트에 위치할 때 바라보는 각도를 수정해줘야 함
-// 보스가 사용하는 공격 관련 기믹 함수는 이름을 Shoot으로 시작
-// 모빌 생성 기믹에 떨어질 위치를 알려주지 않는 것은 백조의 날개짓 애니메이션으로 시전 한다는 걸 알려줄 것이기 때문이다.
+// 죽음 함수에 죽음 후 연출 실행 함수 넣어야 함 stageManaer 이용해서 구현할 것
 
 public class Boss_Swan : MonoBehaviour
 {
     private GameManager gameManager;
+    public PlayerInformation playerInformation;
     private StageManager stagemanager;
     public Player player;
+    public Door door;
 
     private Coroutine currentCoroutine;
 
@@ -32,7 +27,7 @@ public class Boss_Swan : MonoBehaviour
 
     [Header("몬스터 정보")]
     public int currentHealth; // 체력
-    public int monsterColor; // 컬러 넘버 / 파랑 - 1 / 오렌지 - 1 / 보라 - 1
+    public int monsterColor; // 컬러 넘버 / 파랑 - 1 / 오렌지 - 2 / 보라 - 3
     public int damage = 1; // 부딥혔을 때 대미지
     public bool doDie;  // 죽었는지 살았는지
 
@@ -42,6 +37,10 @@ public class Boss_Swan : MonoBehaviour
     public Color newColor; // 변경하려는 색상
     private Material monsterMaterial; // 최초 실행 시 머테리얼
     public Material[] newMaterial; // 적용할 새로운 머티리얼
+
+    // #. 커튼
+    public GameObject Curtain;
+    public Animator anim_Curtain;
 
     public int takeDamage = 0;
 
@@ -85,7 +84,7 @@ public class Boss_Swan : MonoBehaviour
 
 
     [Header("기본 공격 관련")]
-    public GameObject bullet_Simple; // 기본 탄환
+    public GameObject[] bullet_Simple; // 기본 탄환
     public float bulletSpeed;
     [Space(15f)]
 
@@ -93,6 +92,8 @@ public class Boss_Swan : MonoBehaviour
     public GameObject mobile;
     public float fieldRadius_mobile;  // 필드의 반지름
     public int mobileCnt;   // 생성할 모빌 개수
+    public float mobileInterval; // 모빌 생성 간격
+    private float timer = 0f;
     [Space(15f)]
 
     [Header("즉사기 관련")]
@@ -115,12 +116,23 @@ public class Boss_Swan : MonoBehaviour
     [Header("UI 관련")]
     public Slider hpBar_Slider;
 
-    
+    [Header("애니메이션 관련")]
+    public Animator anim;
+
+    [Header("사운드")]
+    public AudioSource sound_simpleShot; // 기본 공격 
+    public AudioSource sound_shoting; // 울부짖음
+    public AudioSource dieplate;  // 즉사기
+    public AudioSource sound_thorn;   // 가시 공격
+
+
+
 
     private void Awake()
     {
         gameManager = FindObjectOfType<GameManager>(); 
         stagemanager = FindObjectOfType<StageManager>();
+        playerInformation = FindObjectOfType<PlayerInformation>();
 
         monsterMaterial = renderer.material;
         originalColor = monsterMaterial.GetColor("_BaseColor"); // 원래 색상 저장
@@ -130,10 +142,13 @@ public class Boss_Swan : MonoBehaviour
 
     private void Start()
     {
+        SetPlayerSound();
+        gameManager.bpmCount = 0;
+        PlayerPrefs.SetInt("Stage_1_MaxFloor", 8);
+
         // 게임 시작 시 최초로 위치한 장소
         transform.position = position_nest[0].position;
         nowpositionNum = 0;
-
 
         //Invoke("BossStart",3f);
     }
@@ -141,13 +156,29 @@ public class Boss_Swan : MonoBehaviour
 
     public void BossStart()
     {
+        Invoke("BossSwanStart",5f);
+    }
+
+    void BossSwanStart()
+    {
         isBossStart = true;
+        MoveBoss();
+    }
 
-        Invoke("MoveBoss", 3f);
+    private void Update()
+    {
+        if(isBossStart)
+        {
+            timer += Time.deltaTime;
 
-        // 여기서 최로로 실행하는 함수를 Invoke()로 하더록 수정 해야 함
-        // 각 패턴 함수들이 패턴 종료 시 다음 패턴 함수를 호출해야함
-        // 현재 코루틴 함수 정보도 담아야 함
+            if (timer >= mobileInterval)
+            {
+                timer -= mobileInterval;
+
+                ShootMobile_Simple();
+                timer = 0;
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -156,58 +187,68 @@ public class Boss_Swan : MonoBehaviour
     }
 
 
-
     // #. 보스 알고리즘 (신버전)
     // 1 - 이동 관련 패턴 / 2 - 공격 관련 패턴
 
     private void NextBossPattern_Move()
     {
-        int randomFunction = Random.Range(1, 11);
-
-        if (randomFunction <= 2)
+        if(!isColorChanged)
         {
-            Debug.Log("돌진");
-            Invoke("RushBoss", 1.5f);
-            //RushBoss();
+            int randomFunction = Random.Range(1, 11);
+            if (!doDie)
+            {
+                if (randomFunction <= 2)
+                {
+                    Debug.Log("돌진");
+                    Invoke("RushBoss", 1.5f);
+                }
+                else if (3 <= randomFunction)
+                {
+                    Debug.Log("이동");
+                    Invoke("MoveBoss", 1.5f);
+                }
+            }
         }
-        else if (3 <= randomFunction)
-        {
-            Debug.Log("이동");
-            Invoke("MoveBoss", 1.5f);
-            //MoveBoss();
-        }
+        
+       
     }
 
     private void NextBossPattern_Attack()
     {
-        // 패턴 사용 확률 - 현재 모빌 패턴은 나오지 않도록 설정되어 있음
-        int randomFunction = Random.Range(61, 101);
+        if (!isColorChanged)
+        {
+            // 패턴 사용 확률 - 현재 모빌 패턴은 나오지 않도록 설정되어 있음
+            int randomFunction = Random.Range(1, 76);
+
+
+            if (!doDie)
+            {
+                if (randomFunction <= 25)
+                {
+                    Debug.Log("즉사기 시작");
+                    Invoke("ShootDiePlate", 1.5f);
+                }
+                else if (26 <= randomFunction && randomFunction <= 50)
+                {
+                    Debug.Log("유도탄 생성");
+                    Invoke("ShootColorBullet", 1.5f);
+                }
+                else if (51 <= randomFunction && randomFunction <= 75)
+                {
+                    Debug.Log("가시 생성");
+                    Invoke("ShootThorn", 1.5f);
+                }
+                else if (76 <= randomFunction && randomFunction <= 100)
+                {
+                    Debug.Log("모빌 생성");
+                    Invoke("ShootMobile", 1.5f);
+                }
+            }
+        }
+
+            
 
         
-        if (randomFunction <= 5)
-        {
-            Debug.Log("모빌 생성");
-            Invoke("ShootMobile",1.5f);
-            //ShootMobile();
-        }
-        else if (6 <= randomFunction && randomFunction <= 10)
-        {
-            Debug.Log("즉사기 시작");
-            Invoke("ShootDiePlate", 1.5f);
-            //ShootDiePlate();
-        }
-        else if (11 <= randomFunction && randomFunction <= 60)
-        {
-            Debug.Log("유도탄 생성");
-            Invoke("ShootColorBullet", 1.5f);
-            //ShootColorBullet();
-        }
-        else if (61 <= randomFunction && randomFunction <= 100)
-        {
-            Debug.Log("가시 생성");
-            Invoke("ShootThorn", 1.5f);
-            //ShootThorn();
-        }
     }
 
 
@@ -218,11 +259,11 @@ public class Boss_Swan : MonoBehaviour
     // #. 데미지 받음 함수 , 절대 private로 하지 마라
     public void TakeDamage(int damageAmount)
     {
-        if(!isColorChanged)
+        if(!isColorChanged && isBossStart && !doDie)
         {
             // hp 깎기
-            currentHealth -= damageAmount * 5;
-            takeDamage += damageAmount * 5;
+            currentHealth -= damageAmount;
+            takeDamage += damageAmount;
             hpBar_Slider.value = (float)currentHealth;
 
             // 색상 변동
@@ -241,14 +282,22 @@ public class Boss_Swan : MonoBehaviour
 
                 if (currentHealth <= 0)
                 {
+                    doDie = true;
+
+                    if (currentCoroutine != null)
+                    {
+                        StopCoroutine(currentCoroutine); // 이미 실행 중인 코루틴을 중지합니다.
+                    }
+                    anim.SetTrigger("doDie");
                     Invoke("Die", 3.0f);
                 }
+                
             }
-
 
             if (takeDamage >= 200)  // 체력이 일정 수준 이하가 되면
             {
                 isColorChanged = true;
+                anim.SetTrigger("doGroggyStart");
                 BackNestBoss();
             }
         }   
@@ -289,7 +338,7 @@ public class Boss_Swan : MonoBehaviour
         }
 
 
-        Renderer renderer = GetComponent<Renderer>();
+   
 
         if (renderer != null && newMaterial != null)
         {
@@ -303,8 +352,8 @@ public class Boss_Swan : MonoBehaviour
     private void Die()
     {
         stagemanager.MonsterCount--;
-
-        Destroy(gameObject);
+        door.MoveSliderUp();
+        Debug.Log("죽음 함수 실행");
     }
 
 
@@ -548,6 +597,9 @@ public class Boss_Swan : MonoBehaviour
     }
     private IEnumerator RushBoss_()
     {
+        anim.SetTrigger("doDashStart");
+        yield return new WaitForSeconds(1.0f);
+
         int targetIndex = AsistNum_RushBoss(nowpositionNum);
 
         Vector3 startPosition = transform.position;
@@ -574,6 +626,7 @@ public class Boss_Swan : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
         LookAtCenterWithTween();
+        anim.SetTrigger("doDashEnd");
 
         yield return new WaitForSeconds(3.0f);
   
@@ -624,9 +677,27 @@ public class Boss_Swan : MonoBehaviour
         takeDamage = 0;
         int poinNum = Random.Range(0, 6);
 
+        Vector3 currentTargetPosition = position_nest[poinNum].position;
+        float distanceThreshold = 50f;
+
+        while (Vector3.Distance(transform.position, currentTargetPosition) < distanceThreshold)
+        {
+            poinNum = Random.Range(0, 6);
+            currentTargetPosition = position_nest[poinNum].position;
+        }
+
+
+
+        yield return new WaitForSeconds(2.0f);
+        anim.SetTrigger("doGroggyEnd");
+        yield return new WaitForSeconds(1.0f);
+
+
         Debug.Log("집으로 돌아갈 준비");
         transform.DOLookAt(position_nest[poinNum].position, 2f).SetEase(Ease.InOutQuad);
         yield return new WaitForSeconds(2.0f);
+        anim.SetTrigger("doDashStart");
+        yield return new WaitForSeconds(1.0f);
 
         Debug.Log("집으로 돌아갑니다 - 1");
 
@@ -638,7 +709,8 @@ public class Boss_Swan : MonoBehaviour
         Debug.Log("집으로 돌아갑니다 - 3");
 
 
-        yield return new WaitForSeconds(1.4f);
+        yield return new WaitForSeconds(2.0f);
+        anim.SetTrigger("doDashEnd");
 
         Debug.Log("집 도착 -> 정면을 바라봅니다.");
 
@@ -648,16 +720,25 @@ public class Boss_Swan : MonoBehaviour
 
 
         yield return new WaitForSeconds(2.5f);
+        anim.SetTrigger("doColor");
 
-        // 랜덤 색상 변동
+        yield return new WaitForSeconds(0.7f);
+
         int randomFunction = Random.Range(0,3);
+        Curtain.SetActive(true);
+        anim_Curtain.SetTrigger("doStart");
+
+
+        yield return new WaitForSeconds(2.5f);
+        anim_Curtain.SetTrigger("doEnd");
         ChangeMaterial(randomFunction);
 
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(2.0f);
+
+
         Debug.Log("색상 변경을 완료합니다");
         isColorChanged = false;
-
-
+        Curtain.SetActive(false);
 
         NextBossPattern_Move();
     }
@@ -682,6 +763,8 @@ public class Boss_Swan : MonoBehaviour
     // #. 기본 공격
     private void ShootBullet()
     {
+        sound_simpleShot.Play();
+
         if (player != null && bullet_Simple != null && position_Mouse != null)
         {
             Vector3 bossMouthPosition = position_Mouse.position;
@@ -699,12 +782,16 @@ public class Boss_Swan : MonoBehaviour
                 // 현재 각도 계산
                 float currentAngle = i * angleInterval;
 
-                GameObject newBullet = Instantiate(bullet_Simple, bossMouthPosition, Quaternion.identity);
+                GameObject newBullet = Instantiate(bullet_Simple[monsterColor - 1], bossMouthPosition, Quaternion.identity);
                 Rigidbody bulletRigidbody = newBullet.GetComponent<Rigidbody>();
                 if (bulletRigidbody != null)
                 {
+                    // 발사 방향 벡터에 회전을 더하여 총알을 회전시킴
                     Vector3 bulletVelocity = Quaternion.Euler(0, currentAngle, 0) * direction;
                     bulletRigidbody.velocity = bulletVelocity * bulletSpeed;
+
+                    // 총알의 회전 방향 설정
+                    newBullet.transform.forward = bulletVelocity.normalized;
                 }
             }
         }
@@ -723,6 +810,10 @@ public class Boss_Swan : MonoBehaviour
     }
     private IEnumerator ShootMobile_()
     {
+        anim.SetTrigger("doShot");
+
+        yield return new WaitForSeconds(1.0f);
+
         Vector3[] thornPositions = new Vector3[mobileCnt]; // 가시 장판 위치를 저장하는 배열
 
         for (int i = 0; i < mobileCnt; i++)
@@ -750,6 +841,31 @@ public class Boss_Swan : MonoBehaviour
         NextBossPattern_Move();
     }
 
+    private void ShootMobile_Simple()
+    {
+        Vector3[] thornPositions = new Vector3[mobileCnt]; // 가시 장판 위치를 저장하는 배열
+
+        for (int i = 0; i < mobileCnt; i++)
+        {
+            float randomAngle = Random.Range(0f, 360f);
+            float radianAngle = randomAngle * Mathf.Deg2Rad;
+
+            // 원 안의 랜덤한 위치 계산 (0부터 반지름까지)
+            float randomRadius = Random.Range(0f, fieldRadius_mobile);
+            Vector3 spawnPosition = position_FeildCenter.position + new Vector3(Mathf.Cos(radianAngle), 0, Mathf.Sin(radianAngle)) * randomRadius;
+
+            thornPositions[i] = spawnPosition; // 위치를 배열에 저장
+        }
+
+        // 가시 생성 알림
+        for (int i = 0; i < mobileCnt; i++)
+        {
+            Vector3 originalPosition = thornPositions[i];
+            originalPosition.y = 60.0f; // 원하는 높이로 조정
+            GameObject mobile_ = Instantiate(mobile, originalPosition, Quaternion.identity);
+        }
+    }
+
 
     // #. 즉사기 패턴 - 2
     private void ShootDiePlate()
@@ -762,6 +878,8 @@ public class Boss_Swan : MonoBehaviour
     }
     private IEnumerator SpawnDiePlate()
     {
+        anim.SetTrigger("doInduce");
+
         float randomAngle = Random.Range(0f, 360f);
         float radianAngle = randomAngle * Mathf.Deg2Rad;
 
@@ -772,7 +890,8 @@ public class Boss_Swan : MonoBehaviour
         GameObject diePlate_alrm_ = Instantiate(diePlate_alrm, spawnPosition, Quaternion.identity);
 
 
-        yield return new WaitForSeconds(4.0f);  // 2초 대기
+        yield return new WaitForSeconds(6.0f);  // 즉사기 시작 전 대기
+        dieplate.Play();
         diePlate.SetActive(true);
         yield return new WaitForSeconds(0.1f);
         diePlate.SetActive(false);
@@ -806,24 +925,34 @@ public class Boss_Swan : MonoBehaviour
     }
     private IEnumerator ShootColorBullet_()
     {
+        anim.SetTrigger("doShot");
+
+        yield return new WaitForSeconds(0.7f);
+        sound_shoting.Play();
+
         if (bullet_Color != null && position_Mouse != null)
         {
             Vector3 bossMouthPosition = position_Mouse.position;
 
-            // 부채꼴 각도 설정
-            float angleInterval = 40f;
+            float angleInterval = 40f; // 부채꼴 각도 간격
+            int numberOfBullets = 3; // 발사할 총알 개수
 
-            for (int i = -1; i <= 1; i++)
+            float startAngle = -angleInterval * (numberOfBullets - 1) / 2; // 시작 각도
+
+            for (int i = 0; i < numberOfBullets; i++)
             {
                 int randomNum = Random.Range(0, 3); // 랜덤 총알 선택
-                float currentAngle = i * angleInterval;
+                // 현재 발사할 총알의 각도 설정
+                float currentAngle = startAngle + angleInterval * i;
 
                 GameObject newBullet = Instantiate(bullet_Color[randomNum], bossMouthPosition, Quaternion.identity);
                 Rigidbody bulletRigidbody = newBullet.GetComponent<Rigidbody>();
 
                 if (bulletRigidbody != null)
                 {
-                    Vector3 direction = Quaternion.Euler(0, currentAngle, 1) * new Vector3(0, 1, -1f);
+                    // 보스가 바라보는 방향으로 총알 발사
+                    Vector3 direction = Quaternion.Euler(0, 0, currentAngle) * transform.up;
+
                     bulletRigidbody.velocity = direction * bulletSpeed_Color;
                 }
             }
@@ -847,6 +976,8 @@ public class Boss_Swan : MonoBehaviour
     }
     IEnumerator SpawnThorns()
     {
+        anim.SetTrigger("doInduce2");
+
         Vector3[] thornPositions = new Vector3[thornCount]; // 가시 장판 위치를 저장하는 배열
 
         for (int i = 0; i < thornCount; i++)
@@ -869,9 +1000,10 @@ public class Boss_Swan : MonoBehaviour
             // 여기에서 1번 가시 장판 오브젝트에 추가한 스크립트를 호출하거나 설정할 수 있습니다.
         }
 
-        yield return new WaitForSeconds(1.5f);  // 2초 대기
+        yield return new WaitForSeconds(2.7f);  // 2초 대기
 
         // 가시 생성
+        sound_thorn.Play();
         for (int i = 0; i < thornCount; i++)
         {
             // 원래 위치 가져오기
@@ -901,27 +1033,6 @@ public class Boss_Swan : MonoBehaviour
 
 
 
-    // #. 패턴 확인용으로 어떤 패턴을 쓰고 있는지 확인하기 위한 함수임
-    // 구체 1개 - 공격관련     구체 2개 - 이동 관련      구체 3개 - 색상 변동
-    private void PatternCheckSphere(int index)
-    {
-        for (int i = 0; i < patternSphere.Length; i++)
-        {
-            if (i <= index)
-            {
-                // 인덱스까지 활성화
-                patternSphere[i].SetActive(true);
-            }
-            else
-            {
-                // 나머지는 비활성화
-                patternSphere[i].SetActive(false);
-            }
-        }
-    }
-
-
-
 
     // #. 보스 알고리즘 (구버전)
     private void BoosAlgorithm()
@@ -934,7 +1045,7 @@ public class Boss_Swan : MonoBehaviour
                 nowPatternNum = 2;
 
                 // 패턴 사용 확률 - 현재 모빌 패턴은 나오지 않도록 설정되어 있음
-                int randomFunction = Random.Range(61, 101);
+                int randomFunction = Random.Range(1, 101);
                 if (randomFunction <= 5)
                 {
                     Debug.Log("모빌 생성");
@@ -981,4 +1092,34 @@ public class Boss_Swan : MonoBehaviour
         isPattern = false;
     }
 
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            GameObject playerObject = other.gameObject;
+            Player playerScript = playerObject.GetComponent<Player>();
+
+            // 플레이어 스크립트가 존재하면 플레이어의 체력을 감소시킴
+            if (playerScript != null)
+            {
+                if (!doDie)
+                {
+                    Debug.Log("플레이어가 데미지를 입습니다.");
+                    playerScript.OnDamage(1);
+                }
+            }
+        }
+    }
+
+
+    // #. 플레이어 사운드 세팅
+    public void SetPlayerSound()
+    { 
+        sound_simpleShot.volume = playerInformation.VolumeEffect;
+        sound_shoting.volume = playerInformation.VolumeEffect;
+        dieplate.volume = playerInformation.VolumeEffect;
+        sound_thorn.volume = playerInformation.VolumeEffect;
+
+    }
 }

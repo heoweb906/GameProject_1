@@ -12,10 +12,14 @@ public class Elevator_1 : MonoBehaviour
     public GameObject[] clearStage;
     public int maxFloor;
 
+    public GameObject arrowObject;
+
     public void Start()
     {
         maxFloor = PlayerPrefs.GetInt("Stage_1_MaxFloor");
+        ActivateObjectAtIndex(0);
         ActivateObjectAtIndex_2(maxFloor - 1);
+        SetAttow(nowFloor - 1);
     }
 
     public void FloorUp()
@@ -23,7 +27,7 @@ public class Elevator_1 : MonoBehaviour
         if(nowFloor < maxFloor) 
         {
             nowFloor++;
-            ActivateObjectAtIndex(nowFloor - 1);
+            SetAttow(nowFloor - 1);
         }
     }
 
@@ -32,7 +36,7 @@ public class Elevator_1 : MonoBehaviour
         if (nowFloor > 1)
         {
             nowFloor--;
-            ActivateObjectAtIndex(nowFloor - 1);
+            SetAttow(nowFloor - 1);
         }
     }
 
@@ -57,6 +61,7 @@ public class Elevator_1 : MonoBehaviour
         {
             Debug.LogWarning("인덱스가 범위를 벗어났습니다.");
         }
+
     }
 
 
@@ -67,17 +72,55 @@ public class Elevator_1 : MonoBehaviour
         {
             for (int i = 0; i <= index; i++)
             {
-                clearStage[i].SetActive(true); // 해당 인덱스까지의 모든 오브젝트 활성화
+                floorArrow[i].SetActive(true); // 해당 인덱스까지의 모든 오브젝트 활성화
             }
 
             for (int i = index + 1; i < floorArrow.Length; i++)
             {
-                clearStage[i].SetActive(false); // 나머지 오브젝트 비활성화
+                floorArrow[i].SetActive(false); // 나머지 오브젝트 비활성화
             }
         }
         else
         {
             Debug.LogWarning("인덱스가 범위를 벗어났습니다.");
         }
+    }
+
+
+    void SetAttow(int floor)
+    {
+        if(floor == 0)
+        {
+            arrowObject.transform.rotation = Quaternion.Euler(0f, 0f, -75f);
+        }
+        else if(floor == 1)
+        {
+            arrowObject.transform.rotation = Quaternion.Euler(0f, 0f, -55f);
+        }
+        else if (floor == 2)
+        {
+            arrowObject.transform.rotation = Quaternion.Euler(0f, 0f, -35f);
+        }
+        else if (floor == 3)
+        {
+            arrowObject.transform.rotation = Quaternion.Euler(0f, 0f, -10f);
+        }
+        else if (floor == 4)
+        {
+            arrowObject.transform.rotation = Quaternion.Euler(0f, 0f, 10f);
+        }
+        else if (floor == 5)
+        {
+            arrowObject.transform.rotation = Quaternion.Euler(0f, 0f, 35f);
+        }
+        else if (floor == 6)
+        {
+            arrowObject.transform.rotation = Quaternion.Euler(0f, 0f, 55f);
+        }
+        else if (floor == 7)
+        {
+            arrowObject.transform.rotation = Quaternion.Euler(0f, 0f, 80f);
+        }
+
     }
 }

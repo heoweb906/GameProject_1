@@ -1,3 +1,4 @@
+using DG.Tweening.Core.Easing;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,7 +30,7 @@ public class Boss_Bullet_Color : Boss_Bullet
 
     private IEnumerator TurnIntoGuidedMissile()
     {
-        yield return new WaitForSeconds(0.4f);
+        yield return new WaitForSeconds(0.6f);
 
         if (guideMissle != null)
         {
@@ -55,5 +56,8 @@ public class Boss_Bullet_Color : Boss_Bullet
             bulletRigidbody.velocity = direction * 80f;  // ÃÑ¾ËÀÇ ¼Óµµ
         }
     }
+
+
+    
 
 }

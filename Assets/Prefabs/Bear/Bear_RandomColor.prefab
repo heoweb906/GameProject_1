@@ -620,8 +620,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 1
-  pushBackForce: 10
-  upwardForce: 5
+  pushBackForce: 500
+  upwardForce: 220
 --- !u!1 &5542753677088416783
 GameObject:
   m_ObjectHideFlags: 0
@@ -797,7 +797,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
   stagemanager: {fileID: 0}
-  currentHealth: 50
+  currentHealth: 80
   monsterColor: 0
   damage: 1
   doDie: 0

@@ -370,6 +370,7 @@ MonoBehaviour:
   mouseSpeed: 0
   volume_BGM: 0
   volume_Effect: 0
+  elevator_1: 0
 --- !u!4 &93373508
 Transform:
   m_ObjectHideFlags: 0
@@ -2071,8 +2072,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Loading...
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 9bee49b280ba2184394c3c1c211e5527, type: 2}
-  m_sharedMaterial: {fileID: 1996439657132899008, guid: 9bee49b280ba2184394c3c1c211e5527, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 45e06bc3a7003b04d9fff77c370202d6, type: 2}
+  m_sharedMaterial: {fileID: 6489069051302689148, guid: 45e06bc3a7003b04d9fff77c370202d6, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

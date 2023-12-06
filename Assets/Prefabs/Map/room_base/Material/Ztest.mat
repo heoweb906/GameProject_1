@@ -72,7 +72,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 92bb48b149fe44d43b2f9ce72328549c, type: 3}
+        m_Texture: {fileID: 2800000, guid: fad7fc8d95cdef240894cbb03adf48ef, type: 3}
         m_Scale: {x: 10, y: 10}
         m_Offset: {x: 0, y: 0}
     - _MatCap_Sampler:
@@ -129,16 +129,16 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _1st2nd_Shades_Feather: 0.0001
-    - _1st_ShadeColor_Feather: 0.193
-    - _1st_ShadeColor_Step: 0.765
-    - _2nd_ShadeColor_Feather: 0.0001
-    - _2nd_ShadeColor_Step: 0.144
+    - _1st2nd_Shades_Feather: 0.276
+    - _1st_ShadeColor_Feather: 0.121
+    - _1st_ShadeColor_Step: 0.764
+    - _2nd_ShadeColor_Feather: 0.276
+    - _2nd_ShadeColor_Step: 0.357
     - _Add_Antipodean_RimLight: 0
     - _Ap_RimLight_FeatherOff: 0
     - _Ap_RimLight_Power: 0.1
-    - _BaseColor_Step: 0.765
-    - _BaseShade_Feather: 0.193
+    - _BaseColor_Step: 0.764
+    - _BaseShade_Feather: 0.121
     - _Base_Speed: 0
     - _BlurLevelMatcap: 0
     - _BumpScale: 1
@@ -211,7 +211,7 @@ Material:
     - _Scroll_EmissiveU: 0
     - _Scroll_EmissiveV: 0
     - _Set_SystemShadowsToBase: 1
-    - _ShadeColor_Step: 0.144
+    - _ShadeColor_Step: 0.357
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
@@ -234,8 +234,8 @@ Material:
     - _utsTechnique: 0
     - _utsVersion: 2.09
     m_Colors:
-    - _1st_ShadeColor: {r: 0.6745098, g: 0.2901961, b: 0.33333334, a: 1}
-    - _2nd_ShadeColor: {r: 1, g: 0.3066038, b: 0.43704474, a: 1}
+    - _1st_ShadeColor: {r: 0.8679245, g: 0.53631186, b: 0.5674005, a: 1}
+    - _2nd_ShadeColor: {r: 1, g: 0.6273585, b: 0.70340776, a: 1}
     - _Ap_RimLightColor: {r: 1, g: 1, b: 1, a: 1}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}

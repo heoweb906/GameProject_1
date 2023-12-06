@@ -11,6 +11,11 @@ public class Boss_Mobile : MonoBehaviour
     // #. 몬스터 생성 관련 변수
     public Transform[] spawnPosition;
     public GameObject[] randomMonster;
+    public bool isSShot;
+
+
+    public GameObject destroyEffectPrefab; // 파괴 시 재생할 파티클 효과 프리팹
+    public float destroyEffectDuration = 2.0f; // 파괴 효과 지속 시간
 
     void Start()
     {
@@ -34,6 +39,10 @@ public class Boss_Mobile : MonoBehaviour
         if (other.CompareTag("Floor"))
         {
             SpawnRandomMonsters();
+
+            // 파괴 효과 재생
+            PlayDestroyEffect();
+
             Destroy(gameObject);
         }
     }
@@ -41,14 +50,30 @@ public class Boss_Mobile : MonoBehaviour
     // 랜덤 몬스터 생성 함수
     private void SpawnRandomMonsters()
     {
-        for (int i = 0; i < spawnPosition.Length; i++)
+        if(!isSShot)
         {
-            // 랜덤한 몬스터 프리팹 선택
-            int randomMonsterIndex = Random.Range(0, randomMonster.Length);
-            GameObject selectedMonster = randomMonster[randomMonsterIndex];
+            for (int i = 0; i < spawnPosition.Length; i++)
+            {
+                // 랜덤한 몬스터 프리팹 선택
+                int randomMonsterIndex = Random.Range(0, randomMonster.Length);
+                GameObject selectedMonster = randomMonster[randomMonsterIndex];
 
-            // 몬스터를 생성 위치에 생성
-            Instantiate(selectedMonster, spawnPosition[i].position, Quaternion.identity);
+                // 몬스터를 생성 위치에 생성
+                Instantiate(selectedMonster, spawnPosition[i].position, Quaternion.identity);
+            }
+        }
+        isSShot = true;
+    }
+
+    private void PlayDestroyEffect()
+    {
+        Debug.Log("파티클을 생성합니다.");
+
+        if (destroyEffectPrefab != null)
+        {
+            // 파티클 효과 재생
+            GameObject effect = Instantiate(destroyEffectPrefab, transform.position, Quaternion.identity);
+            Destroy(effect, destroyEffectDuration); // 효과 파괴
         }
     }
 }

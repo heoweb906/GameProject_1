@@ -52,6 +52,8 @@ public class TimingUIControl : MonoBehaviour
     public Slider volumeBGMSlider;
     public Slider volumeEffectSlider;
 
+    public AudioSource clickButtonSound_;
+
     public void Awake()
     {
         gameManager = FindObjectOfType<GameManager>();
@@ -165,7 +167,9 @@ public class TimingUIControl : MonoBehaviour
     }
     public void jugdeMinus()
     {
-        if(playerInformation.Jugde > -50)
+        clickButtonSound_.Play();
+
+        if (playerInformation.Jugde > -50)
         {
             playerInformation.Jugde -= 1;
 
@@ -177,6 +181,8 @@ public class TimingUIControl : MonoBehaviour
     }
     public void jugdePlus()
     {
+        clickButtonSound_.Play();
+
         if (playerInformation.Jugde < 50)
         {
             playerInformation.Jugde += 1;
@@ -235,6 +241,8 @@ public class TimingUIControl : MonoBehaviour
 
     public void SetOptionReset()
     {
+        clickButtonSound_.Play();
+
         // 마우스 감도, 배경음악, 효과음 초기화
         // 슬라이더 바의 값도 같이 초기화
         OnMouseSensitivityChanged(0.5f);
@@ -257,6 +265,8 @@ public class TimingUIControl : MonoBehaviour
 
     public void ShuShuSleep()
     {
+        clickButtonSound_.Play();
+
         timingfOff = true;
         gifImage.StopDisplay();
         StartCoroutine(gifImage.DisplayImages());

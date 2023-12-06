@@ -108,6 +108,7 @@ public class GameManager : MonoBehaviour
     {
         ShowBulletCount();
         ShowComboGauge();
+        
     }
 
     private void FixedUpdate()
@@ -316,7 +317,9 @@ public class GameManager : MonoBehaviour
         rhythmImages.Clear(); // 리스트 비우기
         iconOn = false;
 
-        yield return new WaitForSeconds(5f);
+
+        // ######### 피버 지속 시간
+        yield return new WaitForSeconds(10f);
 
         if (isFever)
         {

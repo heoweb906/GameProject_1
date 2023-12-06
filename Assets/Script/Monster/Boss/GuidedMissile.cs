@@ -7,6 +7,7 @@ public class GuidedMissile : MonoBehaviour
     public float speed = 10f;
     public float rotationSpeed = 5f;
     public bool b_isGuided;
+    
     private Transform target;
 
     public void SetTarget(Transform newTarget)

@@ -6,7 +6,7 @@ public class AttackArea_Bear : MonoBehaviour
 {
     public int damage = 1;
     public float pushBackForce = 10f; 
-    public float upwardForce = 5f;   
+    public float upwardForce = 5f;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -14,18 +14,12 @@ public class AttackArea_Bear : MonoBehaviour
         {
             GameObject playerObject = other.gameObject;
             Player playerScript = playerObject.GetComponent<Player>();
-            Rigidbody playerRigidbody = playerObject.GetComponent<Rigidbody>();
 
             if (playerScript != null)
             {
+                playerScript.isStun = true;
                 playerScript.OnDamage(damage);
-
-                if (playerRigidbody != null)
-                {
-                    Vector3 pushDirection = (playerObject.transform.position - transform.position).normalized;
-                    playerRigidbody.AddForce(pushDirection * pushBackForce, ForceMode.Impulse);
-                    playerRigidbody.AddForce(Vector3.up * upwardForce, ForceMode.Impulse);
-                }
+                playerScript.PushBackAndLift(pushBackForce, upwardForce, transform.forward); // 여기서 transform.forward는 곰 몬스터 쪽을 향한 방향입니다.
             }
         }
     }

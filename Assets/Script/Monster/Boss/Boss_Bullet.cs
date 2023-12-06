@@ -33,10 +33,14 @@ public class Boss_Bullet : MonoBehaviour
                 GameObject monsterObject = other.gameObject;
                 Boss_Swan monster = monsterObject.GetComponent<Boss_Swan>();
 
-                // 플레이어 스크립트가 존재하면 플레이어의 체력을 감소시킴
+               
                 if (monster != null)
                 {
                     monster.TakeDamage(damageMonster);
+
+
+
+
                 }
                 Destroy(gameObject);
             }
