@@ -37,10 +37,6 @@ public class Boss_Bullet : MonoBehaviour
                 if (monster != null)
                 {
                     monster.TakeDamage(damageMonster);
-
-
-
-
                 }
                 Destroy(gameObject);
             }

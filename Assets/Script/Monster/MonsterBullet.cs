@@ -26,6 +26,13 @@ public class MonsterBullet : MonoBehaviour
                 playerScript.OnDamage(damage);
             }
 
+            
+        }
+
+        if (!other.CompareTag("Monster"))
+        {
+            Debug.Log("파괴되었습니다.");
+            // 몬스터나 보스 태그가 아닌 경우에만 해당 오브젝트 파괴
             Destroy(gameObject);
         }
     }

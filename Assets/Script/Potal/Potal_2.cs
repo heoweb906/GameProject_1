@@ -16,6 +16,8 @@ public class Potal_2 : MonoBehaviour
     public BoxCollider colliderBox;
     private bool b_isDoorOpen;
 
+    public GameObject PowerBox;
+
     private void Awake()
     {
         gameManager = FindObjectOfType<GameManager>();
@@ -31,6 +33,7 @@ public class Potal_2 : MonoBehaviour
     {
         if (stageManager.MonsterCount == 0 && !b_isDoorOpen)
         {
+            PowerBox.SetActive(true);
             // #. 다음 스테이지 함수
             MoveWall();
         }

@@ -15,6 +15,10 @@ public class Potal_1 : MonoBehaviour
     public BoxCollider colliderBox;
     private bool b_isDoorOpen;
 
+
+    public GameObject PowerBox;
+    
+
     private void Awake()
     {
         gameManager = FindObjectOfType<GameManager>(); 
@@ -30,6 +34,8 @@ public class Potal_1 : MonoBehaviour
     {
         if (stageManager.MonsterCount == 0 && !b_isDoorOpen)
         {
+            PowerBox.SetActive(true);
+
             MoveWall();
         }
     }
