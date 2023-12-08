@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: wall
-  m_Shader: {fileID: 4800000, guid: 9baf30ce95c751649b14d96da3a4b4d5, type: 3}
+  m_Shader: {fileID: 4800000, guid: 7a735f9b121d96349b6da0a077299424, type: 3}
   m_ValidKeywords:
   - _EMISSIVE_SIMPLE
   - _OUTLINE_NML
@@ -146,7 +146,7 @@ Material:
     - _CameraRolling_Stabilizer: 1
     - _Clipping_Level: 0
     - _ColorShift_Speed: 0
-    - _CullMode: 2
+    - _CullMode: 0
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
@@ -215,6 +215,7 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
+    - _StencilNo: 1
     - _StepOffset: 0
     - _TweakHighColorOnShadow: 0
     - _TweakMatCapOnShadow: 0

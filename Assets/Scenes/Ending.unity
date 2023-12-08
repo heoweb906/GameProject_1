@@ -318,7 +318,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "20201847 \uD5C8\uC7AC\uC2B9"
+  m_text: "\uD5C8\uC7AC\uC2B9"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 45e06bc3a7003b04d9fff77c370202d6, type: 2}
   m_sharedMaterial: {fileID: 6489069051302689148, guid: 45e06bc3a7003b04d9fff77c370202d6, type: 2}
@@ -851,7 +851,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "20221045 \uAE40\uB960\uD76C"
+  m_text: "\uAE40\uB960\uD76C"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 45e06bc3a7003b04d9fff77c370202d6, type: 2}
   m_sharedMaterial: {fileID: 6489069051302689148, guid: 45e06bc3a7003b04d9fff77c370202d6, type: 2}
@@ -986,7 +986,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "20221045 \uAE40\uB960\uD76C\r\n"
+  m_text: "\uAE40\uB960\uD76C\r\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 45e06bc3a7003b04d9fff77c370202d6, type: 2}
   m_sharedMaterial: {fileID: 6489069051302689148, guid: 45e06bc3a7003b04d9fff77c370202d6, type: 2}
@@ -1121,7 +1121,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "20221045 \uAE40\uB960\uD76C"
+  m_text: "\uAE40\uB960\uD76C"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 45e06bc3a7003b04d9fff77c370202d6, type: 2}
   m_sharedMaterial: {fileID: 6489069051302689148, guid: 45e06bc3a7003b04d9fff77c370202d6, type: 2}
@@ -1256,7 +1256,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "20201847 \uD5C8\uC7AC\uC2B9\n"
+  m_text: "\uD5C8\uC7AC\uC2B9\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 45e06bc3a7003b04d9fff77c370202d6, type: 2}
   m_sharedMaterial: {fileID: 6489069051302689148, guid: 45e06bc3a7003b04d9fff77c370202d6, type: 2}
@@ -1867,4 +1867,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   imageTransform: {fileID: 174408054}
-  duration: 100
+  moveSpeed: 100

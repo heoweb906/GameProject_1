@@ -4,6 +4,18 @@ using UnityEngine;
 
 public class Boos_DiePlateAlrm : MonoBehaviour
 {
+    public float timeToDestroy;
+
+    private void Start()
+    {
+        Invoke("DeleteThorn", timeToDestroy);
+    }
+
+    private void DeleteThorn()
+    {
+        Destroy(gameObject);
+    }
+
     private void OnTriggerStay(Collider collider)
     {
         if (collider.CompareTag("Player"))

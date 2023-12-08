@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 662718741686189275}
   - component: {fileID: 662718741686189274}
   - component: {fileID: 662718741686189268}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: diePlate_Alrm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -112,6 +112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 405b7e9bb6944fe4697a31944f154c68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timeToDestroy: 5
 --- !u!1001 &1669684960892726226
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -119,9 +120,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 662718741686189277}
     m_Modifications:
+    - target: {fileID: 128876, guid: a6eacb635011fb942944d0caec6104ad, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 163638, guid: a6eacb635011fb942944d0caec6104ad, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 191608, guid: a6eacb635011fb942944d0caec6104ad, type: 3}
       propertyPath: m_Name
       value: Swan_Deathskill_Safezone
+      objectReference: {fileID: 0}
+    - target: {fileID: 191608, guid: a6eacb635011fb942944d0caec6104ad, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 457352, guid: a6eacb635011fb942944d0caec6104ad, type: 3}
       propertyPath: m_RootOrder

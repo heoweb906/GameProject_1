@@ -10,7 +10,7 @@ Material:
   m_Name: wall 2
   m_Shader: {fileID: 4800000, guid: 9baf30ce95c751649b14d96da3a4b4d5, type: 3}
   m_ValidKeywords:
-  - _EMISSIVE_SIMPLE
+  - _EMISSIVE_ANIMATION
   - _OUTLINE_NML
   m_InvalidKeywords:
   - _
@@ -150,9 +150,9 @@ Material:
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
-    - _EMISSIVE: 0
+    - _EMISSIVE: 1
     - _Farthest_Distance: 100
-    - _GI_Intensity: 0
+    - _GI_Intensity: 1
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
@@ -161,7 +161,7 @@ Material:
     - _Inverse_MatcapMask: 0
     - _Inverse_Z_Axis_BLD: 1
     - _IsBaseMapAlphaAsClippingMask: 0
-    - _Is_BLD: 0
+    - _Is_BLD: 1
     - _Is_BakedNormal: 0
     - _Is_BlendAddToHiColor: 0
     - _Is_BlendAddToMatCap: 1
@@ -226,7 +226,7 @@ Material:
     - _Tweak_SystemShadowsLevel: 0.26
     - _Tweak_transparency: 1
     - _UVSec: 0
-    - _Unlit_Intensity: 1
+    - _Unlit_Intensity: 2.34
     - _Use_1stAs2nd: 0
     - _Use_BaseAs1st: 0
     - _ZWrite: 1

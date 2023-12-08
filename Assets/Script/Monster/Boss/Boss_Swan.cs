@@ -674,6 +674,8 @@ public class Boss_Swan : MonoBehaviour
     }
     private IEnumerator BackNestBoss_()
     {
+        diePlate.SetActive(false);
+
         takeDamage = 0;
         int poinNum = Random.Range(0, 6);
 
