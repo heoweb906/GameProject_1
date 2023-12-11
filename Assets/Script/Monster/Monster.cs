@@ -24,6 +24,10 @@ public class Monster : MonoBehaviour
     public Color newColor; // 변경하려는 색상
     private Material monsterMaterial; // 몬스터의 머티리얼 추가
 
+    [Header("이펙트")]
+    public ParticleSystem[] hitParticle;
+    private Vector3 hitPosition;
+
 
     private void Awake()
     {
@@ -41,8 +45,27 @@ public class Monster : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int damageAmount)
+    public void TakeDamage(int damageAmount, Vector3 hitPosition)
     {
+        // #. 파티클 생성 부분
+        this.hitPosition = hitPosition;
+
+        // 피격 파티클 재생
+        if (hitParticle != null)
+        {
+            // 파티클 위치와 회전을 피격 위치와 플레이어를 향하도록 설정
+            Vector3 direction = hitPosition - transform.position;
+            Quaternion rotation = Quaternion.LookRotation(direction);
+
+            // 파티클 생성 및 위치, 회전 설정 후 재생
+            ParticleSystem newParticle = Instantiate(hitParticle[monsterColor - 1], hitPosition, rotation);
+            newParticle.Play();
+        }
+
+        gameManager.ComboBarBounceUp();
+
+
+
         if (renderer != null)
         {
             monsterMaterial = renderer.material;
@@ -78,7 +101,7 @@ public class Monster : MonoBehaviour
         }
     }
 
-    private void Die()
+    public void Die()
     {
         stagemanager.MonsterCount--;
         FixPosition(transform.position); // 현재 위치로 고정

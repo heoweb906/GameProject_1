@@ -31,7 +31,7 @@ Transform:
   m_Father: {fileID: 8175669744691745019}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &5012200385940903707
+--- !u!1 &5093233889961460472
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -39,23 +39,23 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4209233274101994227}
+  - component: {fileID: 5620782900723675655}
   m_Layer: 0
-  m_Name: SpawnPosition_3
+  m_Name: SpawnPosition_PowerBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4209233274101994227
+--- !u!4 &5620782900723675655
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5012200385940903707}
+  m_GameObject: {fileID: 5093233889961460472}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.227, y: 0, z: 0.217}
+  m_LocalPosition: {x: -0.263, y: 0, z: 0.186}
   m_LocalScale: {x: 0.083333336, y: 0.33333334, z: 0.083333336}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -212,7 +212,7 @@ Transform:
   - {fileID: 7746688111066580059}
   - {fileID: 5599496132109820979}
   - {fileID: 7716149818165201761}
-  - {fileID: 4209233274101994227}
+  - {fileID: 5620782900723675655}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -312,7 +312,6 @@ MonoBehaviour:
   spawnPosition:
   - {fileID: 5599496132109820979}
   - {fileID: 7716149818165201761}
-  - {fileID: 4209233274101994227}
   randomMonster:
   - {fileID: 7766697538278725007, guid: 8de3ce838673d864a80f41e20e31a347, type: 3}
   - {fileID: 7766697538278725007, guid: 8de3ce838673d864a80f41e20e31a347, type: 3}
@@ -320,3 +319,5 @@ MonoBehaviour:
   isSShot: 0
   destroyEffectPrefab: {fileID: 120316, guid: 06e67c55ba5c53f49ac564ee4a52bd56, type: 3}
   destroyEffectDuration: 2
+  powerBox: {fileID: 1566248382415748940, guid: d8242a95e9fbcdf4fa3841de61a3a72d, type: 3}
+  spawnPoint: {fileID: 5620782900723675655}

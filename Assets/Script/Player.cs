@@ -319,6 +319,12 @@ public class Player : MonoBehaviour
             isRolling = true;
             StartCoroutine(PerformRoll());
         }
+
+        if(shiftDown && !isRolling && gameManager.isFever && gameManager.canRoll && gameManager.b_ActionCnt)
+        {
+            isRolling = true;
+            StartCoroutine(PerformRoll());
+        }
     }
 
     private IEnumerator PerformRoll()
@@ -445,8 +451,8 @@ public class Player : MonoBehaviour
                     {
                         if (monster.monsterColor == weaponNumber)
                         {
-                            monster.TakeDamage(attackDamage);
-                            gameManager.ComboBarBounceUp();
+                            monster.TakeDamage(attackDamage, hit.point);
+                           
                         }
                     }
 
@@ -499,8 +505,8 @@ public class Player : MonoBehaviour
                     {
                         if (boss.monsterColor == weaponNumber)
                         {
-                            boss.TakeDamage(attackDamage);
-                            gameManager.ComboBarBounceUp();
+                            boss.TakeDamage(attackDamage, hit.point);
+                            
                         }
                     }
                 }
@@ -543,7 +549,7 @@ public class Player : MonoBehaviour
             Monster monster = hit.collider.GetComponent<Monster>();
             if (monster != null)
             {
-                monster.TakeDamage(attackDamage);
+                monster.TakeDamage(attackDamage, hit.point);
             }
 
             // 부모 또는 자식 오브젝트의 콜라이더를 검사
@@ -558,11 +564,10 @@ public class Player : MonoBehaviour
 
             if (boss != null)
             {
-                if (boss.monsterColor == weaponNumber)
-                {
-                    boss.TakeDamage(attackDamage);
-                    gameManager.ComboBarBounceUp();
-                }
+                boss.TakeDamage(attackDamage, hit.point);
+                gameManager.ComboBarBounceUp();
+
+
             }
         }
 

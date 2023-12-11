@@ -200,6 +200,10 @@ MonoBehaviour:
   renderer: {fileID: 2752169943274616541}
   originalColor: {r: 1, g: 1, b: 1, a: 0}
   newColor: {r: 0.72392535, g: 1, b: 0, a: 0}
+  hitParticle:
+  - {fileID: 8340392718532922014, guid: d0cc7af57f19881459a4a0f733521359, type: 3}
+  - {fileID: 8340392718532922014, guid: 0ffac8e1696e0314e83a6dcec900acec, type: 3}
+  - {fileID: 8340392718532922014, guid: 6b0811fda8ca13c40ae0eeea72643cbd, type: 3}
   isAttack: 0
   bulletPrefab: {fileID: 713874650978805099, guid: dbcc80bb8c340d64eba51b373c6e9f57, type: 3}
   bulletFake: {fileID: 2752169943483865243}

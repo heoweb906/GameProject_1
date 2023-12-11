@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 713874650978805095}
   - component: {fileID: 713874650978805094}
   - component: {fileID: 3600233101451376257}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Bullet_Simple_Purple
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88,9 +88,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 713874650978805098}
     m_Modifications:
+    - target: {fileID: 1128912121857190, guid: 594888317595cdd41a651788634bc777, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1134537380206928, guid: 594888317595cdd41a651788634bc777, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 1554052670201816, guid: 594888317595cdd41a651788634bc777, type: 3}
       propertyPath: m_Name
       value: Swan_cat_attackPurple
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554052670201816, guid: 594888317595cdd41a651788634bc777, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4581485363590150, guid: 594888317595cdd41a651788634bc777, type: 3}
       propertyPath: m_RootOrder

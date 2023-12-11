@@ -8,9 +8,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// #. 기억!!!
-
-// 죽음 함수에 죽음 후 연출 실행 함수 넣어야 함 stageManaer 이용해서 구현할 것
 
 public class Boss_Swan : MonoBehaviour
 {
@@ -90,6 +87,7 @@ public class Boss_Swan : MonoBehaviour
 
     [Header("모빌 패턴 관련")]
     public GameObject mobile;
+    public GameObject mobile_Arlm;
     public float fieldRadius_mobile;  // 필드의 반지름
     public int mobileCnt;   // 생성할 모빌 개수
     public float mobileInterval; // 모빌 생성 간격
@@ -99,6 +97,8 @@ public class Boss_Swan : MonoBehaviour
     [Header("즉사기 관련")]
     public GameObject diePlate;
     public GameObject diePlate_alrm;
+    public GameObject meteor;
+    public int meteorCnt;
     [Space(15f)]
 
     [Header("유도탄 관련")]
@@ -124,6 +124,10 @@ public class Boss_Swan : MonoBehaviour
     public AudioSource sound_shoting; // 울부짖음
     public AudioSource dieplate;  // 즉사기
     public AudioSource sound_thorn;   // 가시 공격
+
+    [Header("이펙트")]
+    public ParticleSystem[] hitParticle;
+    private Vector3 hitPosition;
 
 
 
@@ -167,7 +171,11 @@ public class Boss_Swan : MonoBehaviour
 
     private void Update()
     {
-        if(isBossStart)
+       
+
+
+
+        if (isBossStart && !doDie)
         {
             timer += Time.deltaTime;
 
@@ -218,7 +226,7 @@ public class Boss_Swan : MonoBehaviour
         if (!isColorChanged)
         {
             // 패턴 사용 확률 - 현재 모빌 패턴은 나오지 않도록 설정되어 있음
-            int randomFunction = Random.Range(1, 76);
+            int randomFunction = Random.Range(1, 26);
 
 
             if (!doDie)
@@ -254,17 +262,63 @@ public class Boss_Swan : MonoBehaviour
 
 
 
-  
+
 
     // #. 데미지 받음 함수 , 절대 private로 하지 마라
-    public void TakeDamage(int damageAmount)
+    public void TakeDamage(int damageAmount, Vector3 hitPosition = default(Vector3))
     {
-        if(!isColorChanged && isBossStart && !doDie)
+        
+
+
+        if (!isColorChanged && isBossStart && !doDie)
         {
-            // hp 깎기
+            // #. 파티클 생성 부분
+            this.hitPosition = hitPosition;
+
+            // 피격 파티클 재생
+            if (hitParticle != null)
+            {
+                // 파티클 위치와 회전을 피격 위치와 플레이어를 향하도록 설정
+                Vector3 direction = hitPosition - transform.position;
+                Quaternion rotation = Quaternion.LookRotation(direction);
+
+                // 파티클 생성 및 위치, 회전 설정 후 재생
+                ParticleSystem newParticle = Instantiate(hitParticle[monsterColor - 1], hitPosition, rotation);
+                newParticle.Play();
+            }
+
+
+            gameManager.ComboBarBounceUp();
+
+
+            // hp 깎기s
             currentHealth -= damageAmount;
             takeDamage += damageAmount;
             hpBar_Slider.value = (float)currentHealth;
+
+
+            if (currentHealth <= 0)
+            {
+                Debug.Log("보스가 죽었습니다.");
+                doDie = true;
+
+                if (currentCoroutine != null)
+                {
+                    StopCoroutine(currentCoroutine); // 이미 실행 중인 코루틴을 중지합니다.
+                }
+
+                
+
+
+
+                anim.SetTrigger("doDie");
+                Invoke("Die", 3.0f);
+            }
+
+
+
+
+
 
             // 색상 변동
             if (renderer != null)
@@ -279,23 +333,12 @@ public class Boss_Swan : MonoBehaviour
 
                 isFlashing = true;
                 StartCoroutine(FlashAfterColorChange());
-
-                if (currentHealth <= 0)
-                {
-                    doDie = true;
-
-                    if (currentCoroutine != null)
-                    {
-                        StopCoroutine(currentCoroutine); // 이미 실행 중인 코루틴을 중지합니다.
-                    }
-                    anim.SetTrigger("doDie");
-                    Invoke("Die", 3.0f);
-                }
-                
+ 
             }
 
-            if (takeDamage >= 200)  // 체력이 일정 수준 이하가 되면
+            if (takeDamage >= 800 && !doDie)  // 체력이 일정 수준 이하가 되면
             {
+                Debug.Log("그로기를 실행합니다.");
                 isColorChanged = true;
                 anim.SetTrigger("doGroggyStart");
                 BackNestBoss();
@@ -845,7 +888,8 @@ public class Boss_Swan : MonoBehaviour
 
     private void ShootMobile_Simple()
     {
-        Vector3[] thornPositions = new Vector3[mobileCnt]; // 가시 장판 위치를 저장하는 배열
+        Vector3[] thornPositions = new Vector3[mobileCnt]; 
+
 
         for (int i = 0; i < mobileCnt; i++)
         {
@@ -859,7 +903,13 @@ public class Boss_Swan : MonoBehaviour
             thornPositions[i] = spawnPosition; // 위치를 배열에 저장
         }
 
-        // 가시 생성 알림
+        for (int i = 0; i < mobileCnt; i++)
+        {
+            Vector3 originalPosition__ = thornPositions[i];
+            GameObject mobile_alrm = Instantiate(mobile_Arlm, originalPosition__, Quaternion.identity);
+        }
+
+
         for (int i = 0; i < mobileCnt; i++)
         {
             Vector3 originalPosition = thornPositions[i];
@@ -869,6 +919,8 @@ public class Boss_Swan : MonoBehaviour
     }
 
 
+    
+
     // #. 즉사기 패턴 - 2
     private void ShootDiePlate()
     {
@@ -876,7 +928,7 @@ public class Boss_Swan : MonoBehaviour
         {
             StopCoroutine(currentCoroutine); // 이미 실행 중인 코루틴을 중지합니다.
         }
-        currentCoroutine = StartCoroutine(SpawnDiePlate());
+        currentCoroutine = StartCoroutine(SpawnMeteor());
     }
     private IEnumerator SpawnDiePlate()
     {
@@ -907,12 +959,60 @@ public class Boss_Swan : MonoBehaviour
         diePlate.SetActive(false);
         yield return new WaitForSeconds(0.1f);
 
-        diePlate_alrm_.SetActive(false);
 
        
         yield return new WaitForSeconds(3.0f);
 
         NextBossPattern_Move();
+    }
+
+    private IEnumerator SpawnMeteor()
+    {
+        anim.SetTrigger("doInduce");
+
+        float randomAngle = Random.Range(0f, 360f);
+        float radianAngle = randomAngle * Mathf.Deg2Rad;
+
+        // 원 안의 랜덤한 위치 계산 (0부터 반지름까지)
+        float randomRadius = Random.Range(0f, fieldRadius_thorn + 5);
+        Vector3 spawnPosition = position_FeildCenter.position + new Vector3(Mathf.Cos(radianAngle), 0, Mathf.Sin(radianAngle)) * randomRadius;
+
+        GameObject diePlate_alrm_ = Instantiate(diePlate_alrm, spawnPosition, Quaternion.identity);
+
+
+        yield return new WaitForSeconds(4.0f);  // 즉사기 시작 전 대기
+
+
+
+        Vector3[] thornPositions = new Vector3[meteorCnt]; // 가시 장판 위치를 저장하는 배열
+
+        for (int i = 0; i < meteorCnt; i++)
+        {
+            randomAngle = Random.Range(0f, 360f);
+            radianAngle = randomAngle * Mathf.Deg2Rad;
+
+            // 원 안의 랜덤한 위치 계산 (0부터 반지름까지)
+            randomRadius = Random.Range(0f, fieldRadius_thorn + 5);
+            spawnPosition = position_FeildCenter.position + new Vector3(Mathf.Cos(radianAngle), 0, Mathf.Sin(radianAngle)) * randomRadius;
+
+            thornPositions[i] = spawnPosition; // 위치를 배열에 저장
+        }
+
+        for (int i = 0; i < meteorCnt; i++)
+        {
+            Vector3 originalPosition = thornPositions[i];
+            originalPosition.y = 60.0f; // 원하는 높이로 조정
+            GameObject meteorObject = Instantiate(meteor, originalPosition, Quaternion.identity);
+            meteorObject.transform.rotation = Quaternion.Euler(-90f, 0f, 0f); // x축 -90도 회전
+        }
+
+
+
+        yield return new WaitForSeconds(3.0f);
+
+        NextBossPattern_Move();
+
+
     }
 
 

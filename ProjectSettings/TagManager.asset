@@ -10,6 +10,7 @@ TagManager:
   - Boss
   - Wall
   - PlayerStep
+  - EEE
   layers:
   - Default
   - TransparentFX

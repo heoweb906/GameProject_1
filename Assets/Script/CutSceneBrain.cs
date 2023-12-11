@@ -9,6 +9,8 @@ using UnityEngine.Events;
 
 public class CutSceneBrain : MonoBehaviour
 {
+    public AudioSource mainMusic;
+
     [Header("아무키나 눌러 시작 관련 변수들")]
     public TMP_Text anyToText;
     public bool bool_isBlinking = false;
@@ -141,6 +143,16 @@ public class CutSceneBrain : MonoBehaviour
             if (cutIndex == 7 || cutIndex == 10 || cutIndex == 12 || cutIndex == 29)  // 좌우로 기울이는 컷들
             {
                 cutInfos[cutIndex].DoLeftRightAnimation_Angle();
+            }
+
+
+
+            if (cutIndex == 31) // 32번째 이미지 처리
+            {
+
+                mainMusic.Play();
+
+
             }
 
 

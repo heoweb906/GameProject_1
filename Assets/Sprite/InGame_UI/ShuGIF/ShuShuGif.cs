@@ -40,6 +40,11 @@ public class ShuShuGif : MonoBehaviour
 
     public IEnumerator DisplayImages()
     {
+        for (int i = 0; i < images.Length; i++)
+        {
+            images[i].gameObject.SetActive(false);
+        }
+
         foreach (Image image in images_Sleep)
         {
             // 현재 이미지를 활성화하고 나머지는 비활성화

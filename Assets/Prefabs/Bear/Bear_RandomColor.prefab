@@ -804,6 +804,10 @@ MonoBehaviour:
   renderer: {fileID: 7066354628884741927}
   originalColor: {r: 1, g: 1, b: 1, a: 0}
   newColor: {r: 0.6227099, g: 1, b: 0, a: 0}
+  hitParticle:
+  - {fileID: 8340392718532922014, guid: d0cc7af57f19881459a4a0f733521359, type: 3}
+  - {fileID: 8340392718532922014, guid: 0ffac8e1696e0314e83a6dcec900acec, type: 3}
+  - {fileID: 8340392718532922014, guid: 6b0811fda8ca13c40ae0eeea72643cbd, type: 3}
   attackArea: {fileID: 4895080222437938582}
   isChase: 1
   isAttack: 0

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 470339573345147393}
   - component: {fileID: 470339573345147405}
   - component: {fileID: 470339573345147404}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Thorn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -201,6 +201,10 @@ PrefabInstance:
     - target: {fileID: 7329920646112754284, guid: a9c07f20390786a4580b696da70cc248, type: 3}
       propertyPath: m_Name
       value: needle (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329920646112754284, guid: a9c07f20390786a4580b696da70cc248, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a9c07f20390786a4580b696da70cc248, type: 3}

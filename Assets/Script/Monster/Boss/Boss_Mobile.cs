@@ -17,6 +17,10 @@ public class Boss_Mobile : MonoBehaviour
     public GameObject destroyEffectPrefab; // 파괴 시 재생할 파티클 효과 프리팹
     public float destroyEffectDuration = 2.0f; // 파괴 효과 지속 시간
 
+
+    public GameObject powerBox;
+    public Transform spawnPoint;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -61,6 +65,13 @@ public class Boss_Mobile : MonoBehaviour
                 // 몬스터를 생성 위치에 생성
                 Instantiate(selectedMonster, spawnPosition[i].position, Quaternion.identity);
             }
+
+            int randomBoxChance = Random.Range(0, 100); // 상자 생성의 확률을 위한 랜덤 숫자
+            if (randomBoxChance < 25)
+            {
+                Instantiate(powerBox, spawnPoint.position, Quaternion.identity);
+            }
+
         }
         isSShot = true;
     }

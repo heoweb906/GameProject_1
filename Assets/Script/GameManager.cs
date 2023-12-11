@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     [Header("총의 상태")]
     public bool rhythmCorrect; // 박자가 맞은 상황인지, 이게 true인 동안에만 키입력을 인정함
     public int bulletCount; // 남은 총알 개수
+    public GameObject needToReload; // 남은 총알 개수
     public TMP_Text cruBulletCount;
     [Space(10f)]
 
@@ -109,6 +110,16 @@ public class GameManager : MonoBehaviour
         ShowBulletCount();
         ShowComboGauge();
         
+        if(bulletCount > 0)
+        {
+            needToReload.SetActive(false);
+        }
+        else
+        {
+            needToReload.SetActive(true);
+        }
+        
+
     }
 
     private void FixedUpdate()

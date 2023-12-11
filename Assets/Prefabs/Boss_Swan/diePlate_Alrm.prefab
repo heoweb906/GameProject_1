@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 662718741686189268}
   m_Layer: 2
   m_Name: diePlate_Alrm
-  m_TagString: Untagged
+  m_TagString: EEE
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 662718741686189272}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -2.07716, y: 1, z: -137.66542}
-  m_LocalScale: {x: 18, y: 2, z: 18}
+  m_LocalScale: {x: 18, y: 2.2901292, z: 18}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1669684960892834138}
@@ -97,7 +97,7 @@ CapsuleCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.95
-  m_Height: 29.01
+  m_Height: 27.3
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!114 &662718741686189268
@@ -112,7 +112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 405b7e9bb6944fe4697a31944f154c68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeToDestroy: 5
+  timeToDestroy: 10
 --- !u!1001 &1669684960892726226
 PrefabInstance:
   m_ObjectHideFlags: 0
