@@ -67,9 +67,12 @@ public class Boss_Mobile : MonoBehaviour
             }
 
             int randomBoxChance = Random.Range(0, 100); // 상자 생성의 확률을 위한 랜덤 숫자
-            if (randomBoxChance < 25)
+
+
+            if (randomBoxChance < 30)
             {
-                Instantiate(powerBox, spawnPoint.position, Quaternion.identity);
+                GameObject powerBoxObject = Instantiate(powerBox, spawnPoint.position, Quaternion.identity);
+                powerBoxObject.transform.rotation = Quaternion.Euler(-90f, 0f, 0f); // x축 -90도 회전
             }
 
         }

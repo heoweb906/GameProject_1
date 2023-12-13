@@ -592,7 +592,7 @@ public class Player : MonoBehaviour
         {
             gameManager.b_ActionCnt = false;
 
-            gameManager.bulletCount = 10;
+            gameManager.bulletCount = 15;
 
             // #. 애니메이션 시간 때문에 한 틱 동안 입력을 안 받음
             StartCoroutine(SetBoolAfterDelay(0.7f));
@@ -703,7 +703,7 @@ public class Player : MonoBehaviour
         weapon3.SetActive(false);
         weapon4_Gatling.SetActive(true);
 
-        attackDamage = 3;
+        attackDamage = 9;
     }
 
     public void FeverOff()

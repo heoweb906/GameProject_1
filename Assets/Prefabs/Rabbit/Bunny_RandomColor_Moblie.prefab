@@ -1364,7 +1364,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
   stagemanager: {fileID: 0}
-  currentHealth: 60
+  currentHealth: 20
   monsterColor: 1
   damage: 1
   doDie: 0

@@ -80,7 +80,7 @@ public class GameManager : MonoBehaviour
 
         if (instance == null)
         {
-            bulletCount = 10;
+            bulletCount = 15;
 
             instance = this;
             DontDestroyOnLoad(gameObject); // 씬 전환 시 파괴되지 않도록 설정

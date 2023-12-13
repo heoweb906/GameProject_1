@@ -226,27 +226,27 @@ public class Boss_Swan : MonoBehaviour
         if (!isColorChanged)
         {
             // 패턴 사용 확률 - 현재 모빌 패턴은 나오지 않도록 설정되어 있음
-            int randomFunction = Random.Range(1, 26);
+            int randomFunction = Random.Range(1, 100);
 
 
             if (!doDie)
             {
-                if (randomFunction <= 25)
+                if (randomFunction <= 15)
                 {
                     Debug.Log("즉사기 시작");
                     Invoke("ShootDiePlate", 1.5f);
                 }
-                else if (26 <= randomFunction && randomFunction <= 50)
+                else if (16 <= randomFunction && randomFunction <= 49)
                 {
                     Debug.Log("유도탄 생성");
                     Invoke("ShootColorBullet", 1.5f);
                 }
-                else if (51 <= randomFunction && randomFunction <= 75)
+                else if (50 <= randomFunction && randomFunction <= 99)
                 {
                     Debug.Log("가시 생성");
                     Invoke("ShootThorn", 1.5f);
                 }
-                else if (76 <= randomFunction && randomFunction <= 100)
+                else if (100 <= randomFunction && randomFunction <= 150)
                 {
                     Debug.Log("모빌 생성");
                     Invoke("ShootMobile", 1.5f);
@@ -336,7 +336,7 @@ public class Boss_Swan : MonoBehaviour
  
             }
 
-            if (takeDamage >= 800 && !doDie)  // 체력이 일정 수준 이하가 되면
+            if (takeDamage >= 200 && !doDie)  // 체력이 일정 수준 이하가 되면
             {
                 Debug.Log("그로기를 실행합니다.");
                 isColorChanged = true;
